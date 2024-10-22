@@ -2,10 +2,13 @@ package services
 
 import (
 	"errors"
+	"os"
 	"server/models"
 	repositories "server/repositories/user"
 	"server/requests"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -52,4 +55,38 @@ func (s *service) Create(userRequest requests.CreateUserRequest) (models.User, e
 
 	newUser, err := s.repository.Create(user)
 	return newUser, err
+}
+
+func (s *service) Login(userRequest requests.LoginUserRequest) (models.User, string, error) {
+	user, err := s.repository.Login(userRequest.Username)
+	if err != nil {
+		return models.User{}, "", errors.New("invalid username or password")
+	}
+
+	if user.ID == 0 { // Check if user is found
+		return models.User{}, "", errors.New("user not found")
+	}
+
+	// Compare inputted password and hashed password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userRequest.Password))
+	if err != nil {
+		return models.User{}, "", errors.New("invalid username or password")
+	}
+
+	// Generate JWT token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub": user.ID,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
+
+	if err != nil {
+		return models.User{}, "", err
+	}
+
+	// Send it back
+
+	return user, tokenString, err
 }

@@ -49,3 +49,13 @@ func (r *repository) Create(user models.User) (models.User, error) {
 	err = r.db.Create(&user).Error
 	return user, err
 }
+
+func (r *repository) Login(username string) (models.User, error) {
+	var user models.User
+
+	err := r.db.Preload("UserRole").First(&user, "username = ?", username).First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.User{}, nil // Return an empty user and nil error to indicate "not found"
+	}
+	return user, err
+}

@@ -27,13 +27,23 @@ func convertUserResponse(o models.User) responses.UserResponse {
 	}
 }
 
+func convertLoginResponse(o models.User, token string) responses.UserLoginResponse {
+	return responses.UserLoginResponse{
+		ID:       o.ID,
+		Name:     o.Name,
+		Username: o.Username,
+		UserRole: o.UserRole.Role,
+		Token:    token,
+	}
+}
+
 func (h *UserController) FindAllUsers(c *gin.Context) {
 	users, err := h.service.FindAll()
 	if err != nil {
 		webResponse := responses.Response{
 			Code:   http.StatusBadRequest,
 			Status: "ERROR",
-			Data:   err,
+			Data:   err.Error(),
 		}
 
 		c.JSON(http.StatusBadRequest, webResponse)
@@ -86,7 +96,7 @@ func (h *UserController) FindUserByID(c *gin.Context) {
 	}
 
 	// If no user is found, return null
-	if user == (models.User{}) {
+	if user.ID == 0 {
 		webResponse := responses.Response{
 			Code:   http.StatusOK,
 			Status: "OK",
@@ -119,7 +129,7 @@ func (h *UserController) CreateUser(c *gin.Context) {
 	user, err := h.service.Create(userForm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"errors": err,
+			"errors": err.Error(),
 		})
 		return
 	}
@@ -128,6 +138,41 @@ func (h *UserController) CreateUser(c *gin.Context) {
 		Code:   http.StatusOK,
 		Status: "OK",
 		Data:   convertUserResponse(user),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *UserController) LoginUser(c *gin.Context) {
+	var userForm requests.LoginUserRequest
+
+	err := c.ShouldBindJSON(&userForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	user, token, err := h.service.Login(userForm)
+	if err != nil {
+		if err.Error() == "user not found" {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"errors": err.Error(),
+		})
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertLoginResponse(user, token),
 	}
 
 	c.JSON(http.StatusOK, webResponse)

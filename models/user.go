@@ -5,9 +5,10 @@ import "time"
 type User struct {
 	ID         int
 	Name       string
-	Username   string
+	Username   string `gorm:"unique"`
 	Password   string
-	UserRoleID uint      `gorm:"not null"`
-	CreatedAt  time.Time `gorm:"foreignKey:UserRoleID"`
+	UserRoleID uint `gorm:"not null foreignKey:UserRoleID"`
+	CreatedAt  time.Time
 	UpdatedAt  time.Time
+	UserRole   UserRole `gorm:"foreignKey:UserRoleID"`
 }

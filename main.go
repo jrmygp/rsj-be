@@ -23,7 +23,8 @@ func main() {
 	userRouter := router.Group("/user")
 	userRouter.GET("", userController.FindAllUsers)
 	userRouter.GET("/:id", userController.FindUserByID)
-	userRouter.POST("", userController.CreateUser)
+	userRouter.POST("/signup", userController.CreateUser)
+	userRouter.POST("/login", userController.LoginUser)
 
 	router.Run(":8080")
 }
