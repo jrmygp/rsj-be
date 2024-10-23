@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  rsj-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: rsj_be
+    restart: always
+    volumes:
+      - ./:/app
+    depends_on:
+      - mysql-db
+    environment:
+      - JWT_SECRET_KEY=Password123!
+      - DB_HOST=mysql-db
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=rsj_be
+      - DB_PORT=3306
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=rsj_be
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
