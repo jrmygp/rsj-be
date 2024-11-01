@@ -14,4 +14,5 @@ RUN go build -v -o main .
 EXPOSE 8080
 
 # Command to run the executable
+RUN chmod +x ./main
 CMD ["./main"]
