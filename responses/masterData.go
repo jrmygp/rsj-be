@@ -5,3 +5,10 @@ type CustomerResponse struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
 }
+
+type PortResponse struct {
+	ID       int    `json:"id"`
+	PortName string `json:"portName"`
+	Note     string `json:"note"`
+	Status   string `json:"status"`
+}

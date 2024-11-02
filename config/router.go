@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -39,11 +39,19 @@ func NewRouter(userController *controllers.UserController, userService userServi
 	masterData := router.Group("/master-data")
 	{
 		masterData.Use(middleware.RequireAuth(userService))
+		// Customer routes
 		masterData.GET("/customer", customerController.FindAll)
 		masterData.GET("/customer/:id", customerController.FindCustomerByID)
 		masterData.POST("/customer", customerController.CreateCustomer)
 		masterData.PATCH("/customer/:id", customerController.EditCustomer)
 		masterData.DELETE("/customer/:id", customerController.DeleteCustomer)
+
+		// Port routes
+		masterData.GET("/port", portController.FindAll)
+		masterData.GET("/port/:id", portController.FindPortByID)
+		masterData.POST("/port", portController.CreatePort)
+		masterData.PATCH("/port/:id", portController.EditPort)
+		masterData.DELETE("/port/:id", portController.DeletePort)
 	}
 
 	return router

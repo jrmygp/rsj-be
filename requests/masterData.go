@@ -9,3 +9,15 @@ type EditCustomerRequest struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
 }
+
+type CreatePortRequest struct {
+	PortName string `json:"portName" binding:"required"`
+	Note     string `json:"note" binding:"required"`
+	Status   string `json:"status" binding:"required"`
+}
+
+type EditPortRequest struct {
+	PortName string `json:"portName"`
+	Note     string `json:"note"`
+	Status   string `json:"status"`
+}
