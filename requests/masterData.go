@@ -21,3 +21,13 @@ type EditPortRequest struct {
 	Note     string `json:"note"`
 	Status   string `json:"status"`
 }
+
+type CreateCostChargesRequest struct {
+	Name   string `json:"name" binding:"required"`
+	Status string `json:"status" binding:"required"`
+}
+
+type EditCostChargesRequest struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+}

@@ -12,3 +12,9 @@ type PortResponse struct {
 	Note     string `json:"note"`
 	Status   string `json:"status"`
 }
+
+type CostChargesResponse struct {
+	ID     int    `json:"id"`
+	Name   string `json:"name"`
+	Status string `json:"status"`
+}
