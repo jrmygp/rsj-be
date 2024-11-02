@@ -31,10 +31,9 @@ func NewRouter(userController *controllers.UserController, userService userServi
 	user := router.Group("/user")
 	{
 		user.Use(middleware.RequireAuth(userService)) // Protect /user routes with authentication
-		user.POST("/create-user", userController.CreateUser)
 		user.GET("", userController.FindAllUsers)
 		user.GET("/:id", userController.FindUserByID)
-		user.POST("/signup", userController.CreateUser)
+		user.POST("/create-user", userController.CreateUser)
 	}
 
 	return router
