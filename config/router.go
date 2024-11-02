@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -26,6 +26,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 	trxWithoutPrefix := router.Group("")
 	{
 		trxWithoutPrefix.POST("/login", userController.LoginUser)
+		trxWithoutPrefix.POST("/create-user", userController.CreateUser)
 	}
 
 	user := router.Group("/user")
@@ -33,7 +34,16 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		user.Use(middleware.RequireAuth(userService)) // Protect /user routes with authentication
 		user.GET("", userController.FindAllUsers)
 		user.GET("/:id", userController.FindUserByID)
-		user.POST("/create-user", userController.CreateUser)
+	}
+
+	masterData := router.Group("/master-data")
+	{
+		masterData.Use(middleware.RequireAuth(userService))
+		masterData.GET("/customer", customerController.FindAll)
+		masterData.GET("/customer/:id", customerController.FindCustomerByID)
+		masterData.POST("/customer", customerController.CreateCustomer)
+		masterData.PATCH("/customer/:id", customerController.EditCustomer)
+		masterData.DELETE("/customer/:id", customerController.DeleteCustomer)
 	}
 
 	return router

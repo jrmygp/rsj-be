@@ -3,7 +3,9 @@ package main
 import (
 	"server/config"
 	"server/controllers"
+	customerRepo "server/repositories/customer"
 	userRepo "server/repositories/user"
+	customerService "server/services/customer"
 	userService "server/services/user"
 )
 
@@ -16,8 +18,12 @@ func main() {
 	userService := userService.NewService(userRepository)
 	userController := controllers.NewUserController(userService)
 
+	customerRepository := customerRepo.NewRepository(db)
+	customerService := customerService.NewService(customerRepository)
+	customerController := controllers.NewCustomerController(customerService)
+
 	// Set up the router
-	router := config.NewRouter(userController, userService)
+	router := config.NewRouter(userController, userService, customerController)
 
 	// Start the server
 	router.Run(":8080")
