@@ -3,6 +3,7 @@ package main
 import (
 	"server/config"
 	"server/controllers"
+	"server/middleware"
 	userRepo "server/repositories/user"
 	userService "server/services/user"
 
@@ -23,7 +24,7 @@ func main() {
 	userRouter := router.Group("/user")
 	userRouter.GET("", userController.FindAllUsers)
 	userRouter.GET("/:id", userController.FindUserByID)
-	userRouter.POST("/signup", userController.CreateUser)
+	userRouter.POST("/signup", middleware.RequireAuth(userRepository), userController.CreateUser)
 	userRouter.POST("/login", userController.LoginUser)
 
 	router.Run(":8080")
