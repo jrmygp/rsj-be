@@ -6,41 +6,35 @@ import (
 	"gorm.io/gorm"
 )
 
-// type Quotation struct {
-// 	gorm.Model
-// 	ID              int
-// 	QuotationNumber string
-// 	// Customer diambil dari table customer
-// 	RateValidity time.Time
-// 	ShippingTerm string
-// 	// PortOfLoading diambil dari table port
-// 	// PortOfDischarge diambil dari table port
-// 	Service string
-// 	// Sales User
-// 	Status    string
-// 	Commodity string
-// 	Weight    int
-// 	Volume    int
-// 	Note      string
-//  Items     Array of objects
-// [{item : diambil dari table cost charges,
-// price: int, mata uang: string,
-// ratio to idr : int (cuma mandatory kalau mata uang yang dipakai non idr),
-// quantity: int, unit: string, note: string}]
-// }
+type Charge struct {
+	ItemID     int    `json:"itemId"`     // Foreign key to CostCharges ID
+	Item       string `json:"item"`       // Name of the item from CostCharges
+	Price      int    `json:"price"`      // Price of the item
+	RatioToIDR *int   `json:"ratioToIdr"` // Nullable integer for ratio to IDR
+	Quantity   int    `json:"quantity"`   // Quantity of the item
+	Unit       string `json:"unit"`       // Unit of measurement
+	Note       string `json:"note"`       // Additional notes
+}
 
 type Quotation struct {
 	gorm.Model
-	ID              int
-	QuotationNumber string
-	RateValidity    time.Time
-	ShippingTerm    string
-	Service         string
-	Status          string
-	Commodity       string
-	Weight          int
-	Volume          int
-	Note            string
-	SalesID         int  // Foreign key field to link to the User table
-	Sales           User `gorm:"foreignKey:SalesID"` // Reference to the User struct
+	ID                int
+	QuotationNumber   string
+	RateValidity      time.Time
+	ShippingTerm      string
+	Service           string
+	Status            string
+	Commodity         string
+	Weight            int
+	Volume            int
+	Note              string
+	SalesID           int
+	Sales             User     `gorm:"foreignKey:SalesID"`
+	CustomerID        uint     `gorm:"not null;foreignKey:CustomerID"`
+	Customer          Customer `gorm:"foreignKey:CustomerID"`
+	PortOfLoadingID   int
+	PortOfLoading     Port `gorm:"foreignKey:PortOfLoadingID"`
+	PortOfDischargeID int
+	PortOfDischarge   Port     `gorm:"foreignKey:PortOfDischargeID"`
+	ListCharges       []Charge `gorm:"type:json"`
 }
