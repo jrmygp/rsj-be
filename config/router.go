@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -59,6 +59,13 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		masterData.POST("/cost-charges", costChargesController.CreateCostCharge)
 		masterData.PATCH("/cost-charges/:id", costChargesController.EditCostCharge)
 		masterData.DELETE("/cost-charges/:id", costChargesController.DeleteCostCharge)
+
+	}
+
+	quotation := router.Group("/quotation")
+	{
+		quotation.Use(middleware.RequireAuth(userService))
+		quotation.POST("", quotationController.CreateQuotation)
 	}
 
 	return router

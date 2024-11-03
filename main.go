@@ -6,10 +6,12 @@ import (
 	costChargesRepo "server/repositories/costCharges"
 	customerRepo "server/repositories/customer"
 	portRepo "server/repositories/port"
+	quotationRepo "server/repositories/quotation"
 	userRepo "server/repositories/user"
 	costChargesService "server/services/costCharges"
 	customerService "server/services/customer"
 	portService "server/services/port"
+	quotationService "server/services/quotation"
 	userService "server/services/user"
 )
 
@@ -34,8 +36,12 @@ func main() {
 	costChargesService := costChargesService.NewService(costChargesRepository)
 	costChargesController := controllers.NewCostChargesController(costChargesService)
 
+	quotationRepository := quotationRepo.NewRepository(db)
+	quotationService := quotationService.NewService(quotationRepository)
+	quotationController := controllers.NewQuotationController(quotationService)
+
 	// Set up the router
-	router := config.NewRouter(userController, userService, customerController, portController, costChargesController)
+	router := config.NewRouter(userController, userService, customerController, portController, costChargesController, quotationController)
 
 	// Start the server
 	router.Run(":8080")
