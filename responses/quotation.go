@@ -1,7 +1,5 @@
 package responses
 
-import "time"
-
 type ChargeResponse struct {
 	ItemName string  `json:"itemName"`
 	Price    float64 `json:"price"`
@@ -14,7 +12,7 @@ type ChargeResponse struct {
 
 type QuotationResponse struct {
 	QuotationNumber   string           `json:"quotationNumber"`
-	RateValidity      time.Time        `json:"rateValidity"`
+	RateValidity      string           `json:"rateValidity"`
 	ShippingTerm      string           `json:"shippingTerm"`
 	Service           string           `json:"service"`
 	Status            string           `json:"status"`

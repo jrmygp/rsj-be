@@ -34,7 +34,7 @@ func (s *service) Create(quotationRequest requests.CreateQuotationRequest) (mode
 
 	quotation := models.Quotation{
 		QuotationNumber:   quotationRequest.QuotationNumber,
-		RateValidity:      quotationRequest.RateValidity,
+		RateValidity:      quotationRequest.RateValidity.Time,
 		ShippingTerm:      quotationRequest.ShippingTerm,
 		Service:           quotationRequest.Service,
 		Status:            quotationRequest.Status,

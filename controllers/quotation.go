@@ -37,7 +37,7 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 
 	return responses.QuotationResponse{
 		QuotationNumber:   o.QuotationNumber,
-		RateValidity:      o.RateValidity,
+		RateValidity:      o.RateValidity.Format("2006-01-02"),
 		ShippingTerm:      o.ShippingTerm,
 		Service:           o.Service,
 		Status:            o.Status,
