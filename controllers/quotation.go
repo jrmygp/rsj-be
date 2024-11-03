@@ -6,6 +6,7 @@ import (
 	"server/requests"
 	"server/responses"
 	services "server/services/quotation"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +30,7 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 			RatioIDR: charge.RatioToIDR,
 			Quantity: charge.Quantity,
 			Unit:     charge.Unit,
-			Note:     &charge.Note,
+			Note:     charge.Note,
 		}
 		listChargesResponse = append(listChargesResponse, chargeResponse)
 	}
@@ -78,4 +79,128 @@ func (h *QuotationController) CreateQuotation(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *QuotationController) FindQuotationByID(c *gin.Context) {
+	idParam := c.Param("id")
+	ID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid ID format",
+		})
+		return
+	}
+
+	quotation, err := h.service.FindByID(ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if quotation.ID == 0 {
+		webResponse := responses.Response{
+			Code:   http.StatusOK,
+			Status: "OK",
+			Data:   nil,
+		}
+		c.JSON(http.StatusOK, webResponse)
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertQuotationResponse(quotation),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+
+}
+
+func (h *QuotationController) EditQuotation(c *gin.Context) {
+	var quotationForm requests.EditQuotationRequest
+
+	err := c.ShouldBindJSON(&quotationForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	quotation, err := h.service.Edit(id, quotationForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertQuotationResponse(quotation),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *QuotationController) DeleteQuotation(c *gin.Context) {
+	idParam := c.Param("id")
+	ID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid ID format",
+		})
+		return
+	}
+	quotation, err := h.service.Delete(ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertQuotationResponse(quotation),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *QuotationController) FindAll(c *gin.Context) {
+	// Search
+	searchQuery := c.Query("search")
+
+	// Page
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to convert page to int",
+		})
+		return
+
+	}
+
+	quotation, totalCount, firstRow, lastRow, totalPages := h.service.FindAll(searchQuery, page)
+
+	webPaginationResponse := responses.PaginationResponse{
+		Code:          http.StatusOK,
+		Status:        "OK",
+		DataResponses: quotation,
+		TotalCount:    totalCount,
+		FirstRow:      firstRow,
+		LastRow:       lastRow,
+		TotalPages:    totalPages,
+	}
+
+	c.JSON(http.StatusOK, webPaginationResponse)
 }

@@ -28,3 +28,20 @@ type CreateQuotationRequest struct {
 	PortOfDischargeID int             `json:"portOfDischargeId" binding:"required"`
 	ListCharges       []ChargeRequest `json:"listCharges" binding:"required,dive"`
 }
+
+type EditQuotationRequest struct {
+	QuotationNumber   string          `json:"quotationNumber"`
+	RateValidity      time.Time       `json:"rateValidity"`
+	ShippingTerm      string          `json:"shippingTerm"`
+	Service           string          `json:"service"`
+	Status            string          `json:"status"`
+	Commodity         string          `json:"commodity"`
+	Weight            int             `json:"weight"`
+	Volume            int             `json:"volume"`
+	Note              string          `json:"note"`
+	SalesID           int             `json:"salesId"`
+	CustomerID        int             `json:"customerId"`
+	PortOfLoadingID   int             `json:"portOfLoadingId"`
+	PortOfDischargeID int             `json:"portOfDischargeId"`
+	ListCharges       []ChargeRequest `json:"listCharges"`
+}

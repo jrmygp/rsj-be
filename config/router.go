@@ -65,7 +65,11 @@ func NewRouter(userController *controllers.UserController, userService userServi
 	quotation := router.Group("/quotation")
 	{
 		quotation.Use(middleware.RequireAuth(userService))
+		quotation.GET("", quotationController.FindAll)
+		quotation.GET("/:id", quotationController.FindQuotationByID)
 		quotation.POST("", quotationController.CreateQuotation)
+		quotation.PATCH("/:id", quotationController.EditQuotation)
+		quotation.DELETE("/:id", quotationController.DeleteQuotation)
 	}
 
 	return router

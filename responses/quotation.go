@@ -3,13 +3,13 @@ package responses
 import "time"
 
 type ChargeResponse struct {
-	ItemName string   `json:"itemName"`
-	Price    float64  `json:"price"`
-	Currency string   `json:"currency"`
-	RatioIDR *float64 `json:"ratioIdr"`
-	Quantity int      `json:"quantity"`
-	Unit     string   `json:"unit"`
-	Note     *string  `json:"note"`
+	ItemName string  `json:"itemName"`
+	Price    float64 `json:"price"`
+	Currency string  `json:"currency"`
+	RatioIDR *int    `json:"ratioIdr"`
+	Quantity int     `json:"quantity"`
+	Unit     string  `json:"unit"`
+	Note     *string `json:"note"`
 }
 
 type QuotationResponse struct {

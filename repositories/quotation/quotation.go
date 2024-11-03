@@ -4,8 +4,8 @@ import "server/models"
 
 type Repository interface {
 	Create(quotation models.Quotation) (models.Quotation, error)
-	// FindByID(ID int) (models.Port, error)
-	// Edit(port models.Port) (models.Port, error)
-	// Delete(ID int) (models.Port, error)
-	// FindAll(searchQuery string, offset int, pageSize int) (port []models.Port, totalCount int64)
+	FindByID(ID int) (models.Quotation, error)
+	Edit(quotation models.Quotation) (models.Quotation, error)
+	Delete(ID int) (models.Quotation, error)
+	FindAll(searchQuery string, offset int, pageSize int) (quotation []models.Quotation, totalCount int64)
 }
