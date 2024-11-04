@@ -36,20 +36,24 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 	}
 
 	return responses.QuotationResponse{
-		QuotationNumber:   o.QuotationNumber,
-		RateValidity:      o.RateValidity.Format("2006-01-02"),
-		ShippingTerm:      o.ShippingTerm,
-		Service:           o.Service,
-		Status:            o.Status,
-		Commodity:         o.Commodity,
-		Weight:            o.Weight,
-		Volume:            o.Volume,
-		Note:              o.Note,
-		SalesID:           o.SalesID,
-		CustomerID:        o.CustomerID,
-		PortOfLoadingID:   o.PortOfLoadingID,
-		PortOfDischargeID: o.PortOfDischargeID,
-		ListCharges:       listChargesResponse,
+		QuotationNumber:     o.QuotationNumber,
+		RateValidity:        o.RateValidity.Format("2006-01-02"),
+		ShippingTerm:        o.ShippingTerm,
+		Service:             o.Service,
+		Status:              o.Status,
+		Commodity:           o.Commodity,
+		Weight:              o.Weight,
+		Volume:              o.Volume,
+		Note:                o.Note,
+		SalesID:             o.SalesID,
+		SalesName:           o.Sales.Name,
+		CustomerID:          o.CustomerID,
+		CustomerName:        o.Customer.Name,
+		PortOfLoadingID:     o.PortOfLoadingID,
+		PortOfLoadingName:   o.PortOfLoading.PortName,
+		PortOfDischargeID:   o.PortOfDischargeID,
+		PortOfDischargeName: o.PortOfDischarge.PortName,
+		ListCharges:         listChargesResponse,
 	}
 }
 
@@ -192,10 +196,16 @@ func (h *QuotationController) FindAll(c *gin.Context) {
 
 	quotation, totalCount, firstRow, lastRow, totalPages := h.service.FindAll(searchQuery, page)
 
+	// Convert each Quotation to QuotationResponse
+	var quotationResponses []responses.QuotationResponse
+	for _, quotation := range quotation {
+		quotationResponses = append(quotationResponses, convertQuotationResponse(quotation))
+	}
+
 	webPaginationResponse := responses.PaginationResponse{
 		Code:          http.StatusOK,
 		Status:        "OK",
-		DataResponses: quotation,
+		DataResponses: quotationResponses,
 		TotalCount:    totalCount,
 		FirstRow:      firstRow,
 		LastRow:       lastRow,

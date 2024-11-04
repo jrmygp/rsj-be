@@ -24,6 +24,7 @@ func (s *service) Create(quotationRequest requests.CreateQuotationRequest) (mode
 	for i, reqCharge := range quotationRequest.ListCharges {
 		listCharges[i] = models.Charge{
 			ItemName:   reqCharge.ItemName,
+			Currency:   reqCharge.Currency,
 			Price:      reqCharge.Price,
 			RatioToIDR: reqCharge.RatioIDR,
 			Quantity:   reqCharge.Quantity,

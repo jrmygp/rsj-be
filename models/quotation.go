@@ -39,24 +39,24 @@ func (jc *JSONCharges) Scan(value interface{}) error {
 
 type Quotation struct {
 	gorm.Model
-	ID              int
-	QuotationNumber string
-	RateValidity    time.Time
-	ShippingTerm    string
-	Service         string
-	Status          string
-	Commodity       string
-	Weight          int
-	Volume          int
-	Note            string
-	SalesID         int `gorm:"foreignKey:SalesID"`
-	// Sales             User
-	CustomerID int `gorm:"not null;foreignKey:CustomerID"`
-	// Customer          Customer `gorm:"foreignKey:CustomerID"`
-	PortOfLoadingID int `gorm:"foreignKey:PortOfLoadingID"`
-	// PortOfLoading     Port
+	ID                int
+	QuotationNumber   string
+	RateValidity      time.Time
+	ShippingTerm      string
+	Service           string
+	Status            string
+	Commodity         string
+	Weight            int
+	Volume            int
+	Note              string
+	SalesID           int `gorm:"foreignKey:SalesID"`
+	Sales             User
+	CustomerID        int `gorm:"not null;foreignKey:CustomerID"`
+	Customer          Customer
+	PortOfLoadingID   int `gorm:"foreignKey:PortOfLoadingID"`
+	PortOfLoading     Port
 	PortOfDischargeID int `gorm:"foreignKey:PortOfDischargeID"`
-	// PortOfDischarge   Port
-	ListCharges JSONCharges `gorm:"type:json"` // Define as JSON type in MySQL
+	PortOfDischarge   Port
+	ListCharges       JSONCharges `gorm:"type:json"` // Define as JSON type in MySQL
 	// ShipmentID
 }

@@ -16,24 +16,46 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) Create(quotation models.Quotation) (models.Quotation, error) {
 	err := r.db.Create(&quotation).Error
+	if err == nil {
+		err = r.db.Preload("Sales").
+			Preload("Customer").
+			Preload("PortOfLoading").
+			Preload("PortOfDischarge").
+			First(&quotation, quotation.ID).Error
+	}
+
 	return quotation, err
 }
 
 func (r *repository) FindByID(ID int) (models.Quotation, error) {
 	var quotation models.Quotation
 
-	err := r.db.First(&quotation, ID).Error
+	err := r.db.Preload("Sales").
+		Preload("Customer").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").First(&quotation, ID).Error
 	return quotation, err
 }
 
 func (r *repository) Edit(quotation models.Quotation) (models.Quotation, error) {
 	err := r.db.Save(&quotation).Error
+	if err == nil {
+		err = r.db.Preload("Sales").
+			Preload("Customer").
+			Preload("PortOfLoading").
+			Preload("PortOfDischarge").
+			First(&quotation, quotation.ID).Error
+	}
+
 	return quotation, err
 }
 
 func (r *repository) Delete(ID int) (models.Quotation, error) {
 	var quotation models.Quotation
-	if err := r.db.First(&quotation, ID).Error; err != nil {
+	if err := r.db.Preload("Sales").
+		Preload("Customer").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").First(&quotation, ID).Error; err != nil {
 		return quotation, err
 	}
 
@@ -52,7 +74,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (quot
 
 	result = result.Offset(offset).Limit(pageSize)
 
-	result.Find(&quotation)
+	result.Preload("Customer").Preload("Sales").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&quotation)
 
 	return quotation, totalCount
 }

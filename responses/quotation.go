@@ -11,18 +11,22 @@ type ChargeResponse struct {
 }
 
 type QuotationResponse struct {
-	QuotationNumber   string           `json:"quotationNumber"`
-	RateValidity      string           `json:"rateValidity"`
-	ShippingTerm      string           `json:"shippingTerm"`
-	Service           string           `json:"service"`
-	Status            string           `json:"status"`
-	Commodity         string           `json:"commodity"`
-	Weight            int              `json:"weight"`
-	Volume            int              `json:"volume"`
-	Note              string           `json:"note"`
-	SalesID           int              `json:"salesId"`
-	CustomerID        int              `json:"customerId"`
-	PortOfLoadingID   int              `json:"portOfLoadingId"`
-	PortOfDischargeID int              `json:"portOfDischargeId"`
-	ListCharges       []ChargeResponse `json:"listCharges"`
+	QuotationNumber     string           `json:"quotationNumber"`
+	RateValidity        string           `json:"rateValidity"`
+	ShippingTerm        string           `json:"shippingTerm"`
+	Service             string           `json:"service"`
+	Status              string           `json:"status"`
+	Commodity           string           `json:"commodity"`
+	Weight              int              `json:"weight"`
+	Volume              int              `json:"volume"`
+	Note                string           `json:"note"`
+	SalesID             int              `json:"salesId"`
+	SalesName           string           `json:"salesName"`
+	CustomerID          int              `json:"customerId"`
+	CustomerName        string           `json:"customerName"`
+	PortOfLoadingID     int              `json:"portOfLoadingId"`
+	PortOfLoadingName   string           `json:"portOfLoadingName"`
+	PortOfDischargeID   int              `json:"portOfDischargeId"`
+	PortOfDischargeName string           `json:"portOfDischargeName"`
+	ListCharges         []ChargeResponse `json:"listCharges"`
 }
