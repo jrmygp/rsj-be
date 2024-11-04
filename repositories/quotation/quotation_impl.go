@@ -72,7 +72,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (quot
 
 	result.Count(&totalCount)
 
-	result = result.Offset(offset).Limit(pageSize)
+	result = result.Order("created_at DESC").Offset(offset).Limit(pageSize)
 
 	result.Preload("Customer").Preload("Sales").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&quotation)
 
