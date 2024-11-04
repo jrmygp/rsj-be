@@ -1,18 +1,37 @@
-# Use the official Golang image as the base image
-FROM golang:latest
+# Builder stage
+FROM golang:latest AS builder
 
-# Set the working directory inside the container
+# Set environment variables for Go
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+
+# Create and set the working directory
 WORKDIR /app
 
-# Copy the local code to the container
+# Copy go.mod and go.sum and download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy the application files and build the app
 COPY . .
+RUN go build -o app .
 
-# Build the Go application
-RUN go build -v -o main .
+# Final stage: use a lightweight scratch image for production
+FROM alpine:latest
 
-# Expose the port the application runs on
+# Install any necessary CA certificates (for connecting securely to external services)
+RUN apk add --no-cache ca-certificates
+
+# Set working directory
+WORKDIR /root/
+
+# Copy the compiled app from the builder stage
+COPY --from=builder /app/app .
+
+# Expose the port
 EXPOSE 8080
 
-# Command to run the executable
-RUN chmod +x ./main
-CMD ["./main"]
+# Set the entry point to the executable
+CMD ["./app"]
