@@ -6,6 +6,7 @@ import (
 )
 
 type Service interface {
+	FindAllNoPagination() ([]models.CostCharges, error)
 	Create(costCharges requests.CreateCostChargesRequest) (models.CostCharges, error)
 	FindByID(ID int) (models.CostCharges, error)
 	Edit(ID int, costCharges requests.EditCostChargesRequest) (models.CostCharges, error)

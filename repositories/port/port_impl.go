@@ -14,6 +14,13 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
+func (r *repository) FindAllNoPagination() ([]models.Port, error) {
+	var ports []models.Port
+	err := r.db.Find(&ports).Error
+
+	return ports, err
+}
+
 func (r *repository) Create(port models.Port) (models.Port, error) {
 	err := r.db.Create(&port).Error
 	return port, err

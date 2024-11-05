@@ -3,6 +3,7 @@ package repositories
 import "server/models"
 
 type Repository interface {
+	FindAllNoPagination() ([]models.CostCharges, error)
 	Create(costCharges models.CostCharges) (models.CostCharges, error)
 	FindByID(ID int) (models.CostCharges, error)
 	Edit(costCharges models.CostCharges) (models.CostCharges, error)

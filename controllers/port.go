@@ -28,6 +28,45 @@ func convertPortResponse(o models.Port) responses.PortResponse {
 	}
 }
 
+func (h *PortController) FindAllPortsWithoutPagination(c *gin.Context) {
+	ports, err := h.service.FindAllNoPagination()
+	if err != nil {
+		webResponse := responses.Response{
+			Code:   http.StatusBadRequest,
+			Status: "ERROR",
+			Data:   err,
+		}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	var portResponses []responses.PortResponse
+
+	if len(ports) == 0 {
+		webResponse := responses.Response{
+			Code:   http.StatusOK,
+			Status: "OK",
+			Data:   []responses.PortResponse{},
+		}
+		c.JSON(http.StatusOK, webResponse)
+		return
+	}
+
+	for _, port := range ports {
+		response := convertPortResponse(port)
+
+		portResponses = append(portResponses, response)
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   portResponses,
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
 func (h *PortController) CreatePort(c *gin.Context) {
 	var portForm requests.CreatePortRequest
 

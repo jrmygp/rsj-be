@@ -17,6 +17,11 @@ func NewService(repository repositories.Repository) *service {
 	return &service{repository}
 }
 
+func (s *service) FindAllNoPagination() ([]models.Port, error) {
+	ports, err := s.repository.FindAllNoPagination()
+	return ports, err
+}
+
 func (s *service) Create(portRequest requests.CreatePortRequest) (models.Port, error) {
 	port := models.Port{
 		PortName: portRequest.PortName,

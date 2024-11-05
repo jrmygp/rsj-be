@@ -57,6 +57,45 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 	}
 }
 
+func (h *QuotationController) FindAllQuotationsWithoutPagination(c *gin.Context) {
+	quotations, err := h.service.FindAllNoPagination()
+	if err != nil {
+		webResponse := responses.Response{
+			Code:   http.StatusBadRequest,
+			Status: "ERROR",
+			Data:   err,
+		}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	var quotationResponses []responses.QuotationResponse
+
+	if len(quotations) == 0 {
+		webResponse := responses.Response{
+			Code:   http.StatusOK,
+			Status: "OK",
+			Data:   []responses.QuotationResponse{},
+		}
+		c.JSON(http.StatusOK, webResponse)
+		return
+	}
+
+	for _, quotation := range quotations {
+		response := convertQuotationResponse(quotation)
+
+		quotationResponses = append(quotationResponses, response)
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   quotationResponses,
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
 func (h *QuotationController) CreateQuotation(c *gin.Context) {
 	var quotationForm requests.CreateQuotationRequest
 

@@ -6,6 +6,7 @@ import (
 )
 
 type Service interface {
+	FindAllNoPagination() ([]models.Customer, error)
 	Create(customer requests.CreateCustomerRequest) (models.Customer, error)
 	FindByID(ID int) (models.Customer, error)
 	Edit(ID int, customer requests.EditCustomerRequest) (models.Customer, error)

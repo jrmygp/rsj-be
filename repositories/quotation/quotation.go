@@ -3,6 +3,7 @@ package repositories
 import "server/models"
 
 type Repository interface {
+	FindAllNoPagination() ([]models.Quotation, error)
 	Create(quotation models.Quotation) (models.Quotation, error)
 	FindByID(ID int) (models.Quotation, error)
 	Edit(quotation models.Quotation) (models.Quotation, error)

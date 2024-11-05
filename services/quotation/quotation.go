@@ -6,6 +6,7 @@ import (
 )
 
 type Service interface {
+	FindAllNoPagination() ([]models.Quotation, error)
 	Create(quotation requests.CreateQuotationRequest) (models.Quotation, error)
 	FindByID(ID int) (models.Quotation, error)
 	Edit(ID int, quotation requests.EditQuotationRequest) (models.Quotation, error)

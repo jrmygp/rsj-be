@@ -14,6 +14,13 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
+func (r *repository) FindAllNoPagination() ([]models.Customer, error) {
+	var customers []models.Customer
+	err := r.db.Find(&customers).Error
+
+	return customers, err
+}
+
 func (r *repository) Create(customer models.Customer) (models.Customer, error) {
 	err := r.db.Create(&customer).Error
 	return customer, err

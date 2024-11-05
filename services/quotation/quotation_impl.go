@@ -17,6 +17,11 @@ func NewService(repository repositories.Repository) *service {
 	return &service{repository}
 }
 
+func (s *service) FindAllNoPagination() ([]models.Quotation, error) {
+	quotations, err := s.repository.FindAllNoPagination()
+	return quotations, err
+}
+
 func (s *service) Create(quotationRequest requests.CreateQuotationRequest) (models.Quotation, error) {
 
 	// Convert `quotationRequest.ListCharges` (type []requests.Charge) to []models.Charge

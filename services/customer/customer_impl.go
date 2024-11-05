@@ -17,6 +17,11 @@ func NewService(repository repositories.Repository) *service {
 	return &service{repository}
 }
 
+func (s *service) FindAllNoPagination() ([]models.Customer, error) {
+	customers, err := s.repository.FindAllNoPagination()
+	return customers, err
+}
+
 func (s *service) Create(customerRequest requests.CreateCustomerRequest) (models.Customer, error) {
 	customer := models.Customer{
 		Name:    customerRequest.Name,

@@ -6,6 +6,7 @@ import (
 )
 
 type Service interface {
+	FindAllNoPagination() ([]models.Port, error)
 	Create(port requests.CreatePortRequest) (models.Port, error)
 	FindByID(ID int) (models.Port, error)
 	Edit(ID int, port requests.EditPortRequest) (models.Port, error)

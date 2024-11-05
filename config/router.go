@@ -40,6 +40,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 	{
 		masterData.Use(middleware.RequireAuth(userService))
 		// Customer routes
+		masterData.GET("/customer/no-pagination", customerController.FindAllCustomersWithoutPagination)
 		masterData.GET("/customer", customerController.FindAll)
 		masterData.GET("/customer/:id", customerController.FindCustomerByID)
 		masterData.POST("/customer", customerController.CreateCustomer)
@@ -47,6 +48,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		masterData.DELETE("/customer/:id", customerController.DeleteCustomer)
 
 		// Port routes
+		masterData.GET("/port/no-pagination", portController.FindAllPortsWithoutPagination)
 		masterData.GET("/port", portController.FindAll)
 		masterData.GET("/port/:id", portController.FindPortByID)
 		masterData.POST("/port", portController.CreatePort)
@@ -54,6 +56,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		masterData.DELETE("/port/:id", portController.DeletePort)
 
 		// Cost Charges routes
+		masterData.GET("/cost-charges/no-pagination", costChargesController.FindAllCostChargesWithoutPagination)
 		masterData.GET("/cost-charges", costChargesController.FindAll)
 		masterData.GET("/cost-charges/:id", costChargesController.FindCostChargeByID)
 		masterData.POST("/cost-charges", costChargesController.CreateCostCharge)
@@ -64,6 +67,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 
 	quotation := router.Group("/quotation")
 	{
+		quotation.GET("/no-pagination", quotationController.FindAllQuotationsWithoutPagination)
 		quotation.Use(middleware.RequireAuth(userService))
 		quotation.GET("", quotationController.FindAll)
 		quotation.GET("/:id", quotationController.FindQuotationByID)

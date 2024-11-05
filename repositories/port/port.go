@@ -3,6 +3,7 @@ package repositories
 import "server/models"
 
 type Repository interface {
+	FindAllNoPagination() ([]models.Port, error)
 	Create(port models.Port) (models.Port, error)
 	FindByID(ID int) (models.Port, error)
 	Edit(port models.Port) (models.Port, error)

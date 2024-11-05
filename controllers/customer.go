@@ -27,6 +27,45 @@ func convertCustomerResponse(o models.Customer) responses.CustomerResponse {
 	}
 }
 
+func (h *CustomerController) FindAllCustomersWithoutPagination(c *gin.Context) {
+	customers, err := h.service.FindAllNoPagination()
+	if err != nil {
+		webResponse := responses.Response{
+			Code:   http.StatusBadRequest,
+			Status: "ERROR",
+			Data:   err,
+		}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	var customerResponses []responses.CustomerResponse
+
+	if len(customers) == 0 {
+		webResponse := responses.Response{
+			Code:   http.StatusOK,
+			Status: "OK",
+			Data:   []responses.CustomerResponse{},
+		}
+		c.JSON(http.StatusOK, webResponse)
+		return
+	}
+
+	for _, customer := range customers {
+		response := convertCustomerResponse(customer)
+
+		customerResponses = append(customerResponses, response)
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   customerResponses,
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
 func (h *CustomerController) CreateCustomer(c *gin.Context) {
 	var customerForm requests.CreateCustomerRequest
 

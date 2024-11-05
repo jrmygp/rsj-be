@@ -17,6 +17,11 @@ func NewService(repository repositories.Repository) *service {
 	return &service{repository}
 }
 
+func (s *service) FindAllNoPagination() ([]models.CostCharges, error) {
+	costCharges, err := s.repository.FindAllNoPagination()
+	return costCharges, err
+}
+
 func (s *service) Create(costChargesRequest requests.CreateCostChargesRequest) (models.CostCharges, error) {
 	costCharge := models.CostCharges{
 		Name:   costChargesRequest.Name,

@@ -27,6 +27,45 @@ func convertCostChargesResponse(o models.CostCharges) responses.CostChargesRespo
 	}
 }
 
+func (h *CostChargesController) FindAllCostChargesWithoutPagination(c *gin.Context) {
+	costCharges, err := h.service.FindAllNoPagination()
+	if err != nil {
+		webResponse := responses.Response{
+			Code:   http.StatusBadRequest,
+			Status: "ERROR",
+			Data:   err,
+		}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	var costChargesResponses []responses.CostChargesResponse
+
+	if len(costCharges) == 0 {
+		webResponse := responses.Response{
+			Code:   http.StatusOK,
+			Status: "OK",
+			Data:   []responses.CostChargesResponse{},
+		}
+		c.JSON(http.StatusOK, webResponse)
+		return
+	}
+
+	for _, costCharge := range costCharges {
+		response := convertCostChargesResponse(costCharge)
+
+		costChargesResponses = append(costChargesResponses, response)
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   costChargesResponses,
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
 func (h *CostChargesController) CreateCostCharge(c *gin.Context) {
 	var costChargeForm requests.CreateCostChargesRequest
 
