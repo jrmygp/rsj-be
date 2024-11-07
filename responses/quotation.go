@@ -11,6 +11,7 @@ type ChargeResponse struct {
 }
 
 type QuotationResponse struct {
+	ID                  int              `json:"id"`
 	QuotationNumber     string           `json:"quotationNumber"`
 	RateValidity        string           `json:"rateValidity"`
 	ShippingTerm        string           `json:"shippingTerm"`
@@ -20,6 +21,7 @@ type QuotationResponse struct {
 	Weight              int              `json:"weight"`
 	Volume              int              `json:"volume"`
 	Note                string           `json:"note"`
+	PaymentTerm         string           `json:"paymentTerm"`
 	SalesID             int              `json:"salesId"`
 	SalesName           string           `json:"salesName"`
 	CustomerID          int              `json:"customerId"`

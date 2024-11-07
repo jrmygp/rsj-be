@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
+	"regexp"
+	"server/helper"
 	"server/models"
 	"server/requests"
 	"server/responses"
@@ -36,6 +39,7 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 	}
 
 	return responses.QuotationResponse{
+		ID:                  o.ID,
 		QuotationNumber:     o.QuotationNumber,
 		RateValidity:        o.RateValidity.Format("2006-01-02"),
 		ShippingTerm:        o.ShippingTerm,
@@ -45,6 +49,7 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 		Weight:              o.Weight,
 		Volume:              o.Volume,
 		Note:                o.Note,
+		PaymentTerm:         o.PaymentTerm,
 		SalesID:             o.SalesID,
 		SalesName:           o.Sales.Name,
 		CustomerID:          o.CustomerID,
@@ -55,6 +60,11 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 		PortOfDischargeName: o.PortOfDischarge.PortName,
 		ListCharges:         listChargesResponse,
 	}
+}
+
+func sanitizeFilename(filename string) string {
+	re := regexp.MustCompile(`[\/:*?"<>|]`)
+	return re.ReplaceAllString(filename, "_")
 }
 
 func (h *QuotationController) FindAllQuotationsWithoutPagination(c *gin.Context) {
@@ -252,4 +262,34 @@ func (h *QuotationController) FindAll(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, webPaginationResponse)
+}
+
+func (h *QuotationController) GeneratePDF(c *gin.Context) {
+	idParam := c.Param("id")
+	ID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid ID format",
+		})
+		return
+	}
+
+	quotation, err := h.service.FindByID(ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if quotation.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Quotation with this ID is not found!",
+		})
+		return
+	}
+	filePath := fmt.Sprintf("pdf/quotation/invoice-%s.pdf", sanitizeFilename(quotation.QuotationNumber))
+	helper.GenerateQuotationPDF(quotation)
+
+	c.File(filePath)
 }

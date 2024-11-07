@@ -74,6 +74,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		quotation.POST("", quotationController.CreateQuotation)
 		quotation.PATCH("/:id", quotationController.EditQuotation)
 		quotation.DELETE("/:id", quotationController.DeleteQuotation)
+		quotation.GET("/generate-pdf/:id", quotationController.GeneratePDF)
 	}
 
 	return router

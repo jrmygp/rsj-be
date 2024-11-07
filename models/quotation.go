@@ -49,6 +49,7 @@ type Quotation struct {
 	Weight            int
 	Volume            int
 	Note              string
+	PaymentTerm       string
 	SalesID           int `gorm:"foreignKey:SalesID"`
 	Sales             User
 	CustomerID        int `gorm:"not null;foreignKey:CustomerID"`

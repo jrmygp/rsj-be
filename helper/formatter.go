@@ -1,0 +1,18 @@
+package helper
+
+import (
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
+)
+
+func FormatThousandSeparatorFloat(n float64) string {
+	p := message.NewPrinter(language.English)
+
+	return p.Sprintf("%.2f", n)
+}
+
+func FormatThousandSeparatorInt(n int) string {
+	p := message.NewPrinter(language.English)
+
+	return p.Sprintf("%d", n)
+}
