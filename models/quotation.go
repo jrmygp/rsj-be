@@ -10,14 +10,13 @@ import (
 )
 
 type Charge struct {
-	ItemID     int     `json:"itemId"`     // Foreign key to CostCharges ID
-	ItemName   string  `json:"itemName"`   // Name of the item from CostCharges
-	Price      float64 `json:"price"`      // Price of the item
-	Currency   string  `json:"currency"`   // Currency of item price
-	RatioToIDR *int    `json:"ratioToIdr"` // Nullable integer for ratio to IDR
-	Quantity   int     `json:"quantity"`   // Quantity of the item
-	Unit       string  `json:"unit"`       // Unit of measurement
-	Note       *string `json:"note"`       // Additional notes
+	ItemID   int     `json:"itemId"`   // Foreign key to CostCharges ID
+	ItemName string  `json:"itemName"` // Name of the item from CostCharges
+	Price    float64 `json:"price"`    // Price of the item
+	Currency string  `json:"currency"` // Currency of item price
+	Quantity int     `json:"quantity"` // Quantity of the item
+	Unit     string  `json:"unit"`     // Unit of measurement
+	Note     *string `json:"note"`     // Additional notes
 }
 
 // JSONCharges is a custom type that wraps []Charge

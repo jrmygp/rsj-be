@@ -6,13 +6,13 @@ import (
 )
 
 type ChargeRequest struct {
-	ItemName string  `json:"itemName" binding:"required"`
-	Price    float64 `json:"price" binding:"required"`
-	Currency string  `json:"currency" binding:"required"`
-	RatioIDR *int    `json:"ratioIdr"`
-	Quantity int     `json:"quantity" binding:"required"`
-	Unit     string  `json:"unit" binding:"required"`
-	Note     *string `json:"note"`
+	ItemName string   `json:"itemName" binding:"required"`
+	Price    float64  `json:"price" binding:"required"`
+	Currency string   `json:"currency" binding:"required"`
+	RatioIDR *float64 `json:"ratioIdr"`
+	Quantity int      `json:"quantity" binding:"required"`
+	Unit     string   `json:"unit" binding:"required"`
+	Note     *string  `json:"note"`
 }
 
 type CreateQuotationRequest struct {

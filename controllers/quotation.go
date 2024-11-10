@@ -30,7 +30,6 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 			ItemName: charge.ItemName,
 			Price:    charge.Price,
 			Currency: charge.Currency,
-			RatioIDR: charge.RatioToIDR,
 			Quantity: charge.Quantity,
 			Unit:     charge.Unit,
 			Note:     charge.Note,
