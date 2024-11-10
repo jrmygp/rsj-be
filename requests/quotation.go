@@ -25,6 +25,7 @@ type CreateQuotationRequest struct {
 	Weight            int               `json:"weight" binding:"required"`
 	Volume            int               `json:"volume" binding:"required"`
 	Note              string            `json:"note" binding:"required"`
+	PaymentTerm       string            `json:"paymentTerm" binding:"required"`
 	SalesID           int               `json:"salesId" binding:"required"`
 	CustomerID        int               `json:"customerId" binding:"required"`
 	PortOfLoadingID   int               `json:"portOfLoadingId" binding:"required"`
@@ -42,6 +43,7 @@ type EditQuotationRequest struct {
 	Weight            int             `json:"weight"`
 	Volume            int             `json:"volume"`
 	Note              string          `json:"note"`
+	PaymentTerm       string          `json:"paymentTerm"`
 	SalesID           int             `json:"salesId"`
 	CustomerID        int             `json:"customerId"`
 	PortOfLoadingID   int             `json:"portOfLoadingId"`

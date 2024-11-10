@@ -47,6 +47,7 @@ func (s *service) Create(quotationRequest requests.CreateQuotationRequest) (mode
 		Weight:            quotationRequest.Weight,
 		Volume:            quotationRequest.Volume,
 		Note:              quotationRequest.Note,
+		PaymentTerm:       quotationRequest.PaymentTerm,
 		SalesID:           quotationRequest.SalesID,
 		CustomerID:        quotationRequest.CustomerID,
 		PortOfLoadingID:   quotationRequest.PortOfLoadingID,
@@ -100,6 +101,12 @@ func (s *service) Edit(ID int, quotationRequest requests.EditQuotationRequest) (
 	}
 	if quotationRequest.Volume != 0 {
 		quotation.Volume = quotationRequest.Volume
+	}
+	if quotationRequest.Note != "" {
+		quotation.Note = quotationRequest.Note
+	}
+	if quotationRequest.PaymentTerm != "" {
+		quotation.PaymentTerm = quotationRequest.PaymentTerm
 	}
 	if quotationRequest.SalesID != 0 {
 		quotation.SalesID = quotationRequest.SalesID
