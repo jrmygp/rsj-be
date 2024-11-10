@@ -31,14 +31,14 @@ func NewRouter(userController *controllers.UserController, userService userServi
 
 	user := router.Group("/user")
 	{
-		user.Use(middleware.RequireAuth(userService)) // Protect /user routes with authentication
+		user.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
 		user.GET("", userController.FindAllUsers)
 		user.GET("/:id", userController.FindUserByID)
 	}
 
 	masterData := router.Group("/master-data")
 	{
-		masterData.Use(middleware.RequireAuth(userService))
+		masterData.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
 		// Customer routes
 		masterData.GET("/customer/no-pagination", customerController.FindAllCustomersWithoutPagination)
 		masterData.GET("/customer", customerController.FindAll)
@@ -67,8 +67,9 @@ func NewRouter(userController *controllers.UserController, userService userServi
 
 	quotation := router.Group("/quotation")
 	{
+		quotation.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+
 		quotation.GET("/no-pagination", quotationController.FindAllQuotationsWithoutPagination)
-		quotation.Use(middleware.RequireAuth(userService))
 		quotation.GET("", quotationController.FindAll)
 		quotation.GET("/:id", quotationController.FindQuotationByID)
 		quotation.POST("", quotationController.CreateQuotation)
