@@ -47,10 +47,13 @@ func (s *service) Create(userRequest requests.CreateUserRequest) (models.User, e
 	}
 
 	user := models.User{
-		Name:       userRequest.Name,
-		Username:   userRequest.Username,
-		Password:   string(hashedPassword),
-		UserRoleID: userRequest.UserRoleID,
+		Name:        userRequest.Name,
+		Username:    userRequest.Username,
+		Password:    string(hashedPassword),
+		UserRoleID:  userRequest.UserRoleID,
+		Email:       userRequest.Email,
+		PhoneNumber: userRequest.PhoneNumber,
+		Address:     userRequest.Address,
 	}
 
 	newUser, err := s.repository.Create(user)
