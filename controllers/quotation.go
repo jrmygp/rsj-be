@@ -27,6 +27,7 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 
 	for _, charge := range o.ListCharges {
 		chargeResponse := responses.ChargeResponse{
+			ItemID:   charge.ItemID,
 			ItemName: charge.ItemName,
 			Price:    charge.Price,
 			Currency: charge.Currency,
