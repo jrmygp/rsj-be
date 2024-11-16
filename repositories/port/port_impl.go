@@ -52,7 +52,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (port
 	result := r.db.Model(&models.Port{})
 
 	if searchQuery != "" {
-		result = result.Where("portname LIKE ?", "%"+searchQuery+"%")
+		result = result.Where("port_name LIKE ?", "%"+searchQuery+"%")
 	}
 
 	result.Count(&totalCount)
