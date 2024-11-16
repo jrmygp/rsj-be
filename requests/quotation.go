@@ -6,6 +6,7 @@ import (
 )
 
 type ChargeRequest struct {
+	ItemID   int      `json:"itemId" binding:"required"`
 	ItemName string   `json:"itemName" binding:"required"`
 	Price    float64  `json:"price" binding:"required"`
 	Currency string   `json:"currency" binding:"required"`

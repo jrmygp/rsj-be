@@ -28,6 +28,7 @@ func (s *service) Create(quotationRequest requests.CreateQuotationRequest) (mode
 	listCharges := make([]models.Charge, len(quotationRequest.ListCharges))
 	for i, reqCharge := range quotationRequest.ListCharges {
 		listCharges[i] = models.Charge{
+			ItemID:   reqCharge.ItemID,
 			ItemName: reqCharge.ItemName,
 			Currency: reqCharge.Currency,
 			Price:    reqCharge.Price,
@@ -126,6 +127,7 @@ func (s *service) Edit(ID int, quotationRequest requests.EditQuotationRequest) (
 		var jsonCharges models.JSONCharges //
 		for _, charge := range quotationRequest.ListCharges {
 			jsonCharge := models.Charge{
+				ItemID:   charge.ItemID,
 				ItemName: charge.ItemName,
 				Price:    charge.Price,
 				Currency: charge.Currency,

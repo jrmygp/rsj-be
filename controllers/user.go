@@ -21,9 +21,12 @@ func NewUserController(service services.Service) *UserController {
 
 func convertUserResponse(o models.User) responses.UserResponse {
 	return responses.UserResponse{
-		ID:       o.ID,
-		Name:     o.Name,
-		Username: o.Username,
+		ID:          o.ID,
+		Name:        o.Name,
+		Username:    o.Username,
+		Email:       o.Email,
+		Address:     o.Address,
+		PhoneNumber: o.PhoneNumber,
 	}
 }
 

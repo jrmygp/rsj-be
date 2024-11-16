@@ -1,6 +1,7 @@
 package responses
 
 type ChargeResponse struct {
+	ItemID   int     `json:"itemId"`
 	ItemName string  `json:"itemName"`
 	Price    float64 `json:"price"`
 	Currency string  `json:"currency"`
