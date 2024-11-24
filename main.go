@@ -37,7 +37,7 @@ func main() {
 	costChargesController := controllers.NewCostChargesController(costChargesService)
 
 	quotationRepository := quotationRepo.NewRepository(db)
-	quotationService := quotationService.NewService(quotationRepository)
+	quotationService := quotationService.NewService(quotationRepository, customerRepository, userRepository, portRepository)
 	quotationController := controllers.NewQuotationController(quotationService)
 
 	// Set up the router

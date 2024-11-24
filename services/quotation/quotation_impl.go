@@ -3,18 +3,25 @@ package services
 import (
 	"errors"
 	"server/models"
+	customerRepositories "server/repositories/customer"
+	portRepositories "server/repositories/port"
 	repositories "server/repositories/quotation"
+	userRepositories "server/repositories/user"
 	"server/requests"
 
 	"gorm.io/gorm"
 )
 
 type service struct {
-	repository repositories.Repository
+	repository         repositories.Repository
+	customerRepository customerRepositories.Repository
+	userRepository     userRepositories.Repository
+	portRepository     portRepositories.Repository
 }
 
-func NewService(repository repositories.Repository) *service {
-	return &service{repository}
+func NewService(repository repositories.Repository, customerRepository customerRepositories.Repository, userRepository userRepositories.Repository, portRepository portRepositories.Repository) *service {
+	return &service{repository, customerRepository, userRepository, portRepository}
+
 }
 
 func (s *service) FindAllNoPagination() ([]models.Quotation, error) {
@@ -110,15 +117,48 @@ func (s *service) Edit(ID int, quotationRequest requests.EditQuotationRequest) (
 		quotation.PaymentTerm = quotationRequest.PaymentTerm
 	}
 	if quotationRequest.SalesID != 0 {
+		sales, err := s.userRepository.FindByID(quotationRequest.SalesID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.Quotation{}, errors.New("user not found")
+			}
+			return models.Quotation{}, err
+		}
+		quotation.Sales = sales
 		quotation.SalesID = quotationRequest.SalesID
 	}
 	if quotationRequest.CustomerID != 0 {
+		customer, err := s.customerRepository.FindByID(quotationRequest.CustomerID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.Quotation{}, errors.New("customer not found")
+			}
+			return models.Quotation{}, err
+		}
+		quotation.Customer = customer
 		quotation.CustomerID = quotationRequest.CustomerID
+
 	}
 	if quotationRequest.PortOfLoadingID != 0 {
+		port, err := s.portRepository.FindByID(quotationRequest.PortOfLoadingID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.Quotation{}, errors.New("port not found")
+			}
+			return models.Quotation{}, err
+		}
+		quotation.PortOfLoading = port
 		quotation.PortOfLoadingID = quotationRequest.PortOfLoadingID
 	}
 	if quotationRequest.PortOfDischargeID != 0 {
+		port, err := s.portRepository.FindByID(quotationRequest.PortOfDischargeID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.Quotation{}, errors.New("port not found")
+			}
+			return models.Quotation{}, err
+		}
+		quotation.PortOfLoading = port
 		quotation.PortOfDischargeID = quotationRequest.PortOfDischargeID
 	}
 
