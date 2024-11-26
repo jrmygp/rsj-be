@@ -16,7 +16,7 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) FindAllNoPagination() ([]models.CostCharges, error) {
 	var costCharges []models.CostCharges
-	err := r.db.Find(&costCharges).Error
+	err := r.db.Where("status = ?", "Active").Find(&costCharges).Error
 
 	return costCharges, err
 }

@@ -120,7 +120,7 @@ func addInvoiceDetail(m core.Maroto, quotation models.Quotation) {
 				Align: align.Left,
 				Size:  12,
 			}),
-		text.NewCol(6, "Weight/Volume : "+fmt.Sprintf("%d kg / %d CBM", quotation.Weight, quotation.Volume),
+		text.NewCol(6, "Weight/Volume : "+fmt.Sprintf("%.3f kg / %.3f CBM", quotation.Weight, quotation.Volume),
 			props.Text{
 				Align: align.Left,
 				Size:  12,
@@ -230,16 +230,21 @@ func getObject(quotation models.Quotation) []QuotationItem {
 		subTotal := float64(charge.Quantity) * charge.Price
 
 		items = append(items, QuotationItem{
-			Item:     charge.ItemName,
-			Qty:      FormatThousandSeparatorInt(charge.Quantity),
-			Unit:     charge.Unit,
+			Item: charge.ItemName,
+			Qty:  FormatThousandSeparatorInt(charge.Quantity),
+			Unit: func() string {
+				if charge.Unit != nil {
+					return *charge.Unit
+				}
+				return ""
+			}(),
 			Price:    charge.Currency + " " + FormatThousandSeparatorFloat(charge.Price),
 			SubTotal: charge.Currency + " " + FormatThousandSeparatorFloat(subTotal),
 			Remarks: func() string {
 				if charge.Note != nil {
 					return *charge.Note
 				}
-				return "" // Return empty string if Note is nil
+				return ""
 			}(),
 		})
 	}

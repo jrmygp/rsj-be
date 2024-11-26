@@ -6,7 +6,7 @@ type ChargeResponse struct {
 	Price    float64 `json:"price"`
 	Currency string  `json:"currency"`
 	Quantity int     `json:"quantity"`
-	Unit     string  `json:"unit"`
+	Unit     *string `json:"unit"`
 	Note     *string `json:"note"`
 }
 
@@ -18,8 +18,8 @@ type QuotationResponse struct {
 	Service             string           `json:"service"`
 	Status              string           `json:"status"`
 	Commodity           string           `json:"commodity"`
-	Weight              int              `json:"weight"`
-	Volume              int              `json:"volume"`
+	Weight              float64          `json:"weight"`
+	Volume              float64          `json:"volume"`
 	Note                string           `json:"note"`
 	PaymentTerm         string           `json:"paymentTerm"`
 	SalesID             int              `json:"salesId"`

@@ -12,7 +12,7 @@ type ChargeRequest struct {
 	Currency string   `json:"currency" binding:"required"`
 	RatioIDR *float64 `json:"ratioIdr"`
 	Quantity int      `json:"quantity" binding:"required"`
-	Unit     string   `json:"unit" binding:"required"`
+	Unit     *string  `json:"unit" binding:"required"`
 	Note     *string  `json:"note"`
 }
 
@@ -23,8 +23,8 @@ type CreateQuotationRequest struct {
 	Service           string            `json:"service" binding:"required"`
 	Status            string            `json:"status" binding:"required"`
 	Commodity         string            `json:"commodity" binding:"required"`
-	Weight            int               `json:"weight" binding:"required"`
-	Volume            int               `json:"volume" binding:"required"`
+	Weight            float64           `json:"weight" binding:"required"`
+	Volume            float64           `json:"volume" binding:"required"`
 	Note              string            `json:"note" binding:"required"`
 	PaymentTerm       string            `json:"paymentTerm" binding:"required"`
 	SalesID           int               `json:"salesId" binding:"required"`
@@ -41,8 +41,8 @@ type EditQuotationRequest struct {
 	Service           string          `json:"service"`
 	Status            string          `json:"status"`
 	Commodity         string          `json:"commodity"`
-	Weight            int             `json:"weight"`
-	Volume            int             `json:"volume"`
+	Weight            float64         `json:"weight"`
+	Volume            float64         `json:"volume"`
 	Note              string          `json:"note"`
 	PaymentTerm       string          `json:"paymentTerm"`
 	SalesID           int             `json:"salesId"`

@@ -31,7 +31,6 @@ func (s *service) FindAllNoPagination() ([]models.Quotation, error) {
 
 func (s *service) Create(quotationRequest requests.CreateQuotationRequest) (models.Quotation, error) {
 
-	// Convert `quotationRequest.ListCharges` (type []requests.Charge) to []models.Charge
 	listCharges := make([]models.Charge, len(quotationRequest.ListCharges))
 	for i, reqCharge := range quotationRequest.ListCharges {
 		listCharges[i] = models.Charge{
@@ -158,7 +157,7 @@ func (s *service) Edit(ID int, quotationRequest requests.EditQuotationRequest) (
 			}
 			return models.Quotation{}, err
 		}
-		quotation.PortOfLoading = port
+		quotation.PortOfDischarge = port
 		quotation.PortOfDischargeID = quotationRequest.PortOfDischargeID
 	}
 

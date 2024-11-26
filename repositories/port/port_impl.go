@@ -16,7 +16,7 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) FindAllNoPagination() ([]models.Port, error) {
 	var ports []models.Port
-	err := r.db.Find(&ports).Error
+	err := r.db.Where("status = ?", "Active").Find(&ports).Error
 
 	return ports, err
 }

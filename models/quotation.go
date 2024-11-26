@@ -15,7 +15,7 @@ type Charge struct {
 	Price    float64 `json:"price"`    // Price of the item
 	Currency string  `json:"currency"` // Currency of item price
 	Quantity int     `json:"quantity"` // Quantity of the item
-	Unit     string  `json:"unit"`     // Unit of measurement
+	Unit     *string `json:"unit"`     // Unit of measurement
 	Note     *string `json:"note"`     // Additional notes
 }
 
@@ -45,8 +45,8 @@ type Quotation struct {
 	Service           string
 	Status            string
 	Commodity         string
-	Weight            int
-	Volume            int
+	Weight            float64
+	Volume            float64
 	Note              string
 	PaymentTerm       string
 	SalesID           int `gorm:"foreignKey:SalesID"`
