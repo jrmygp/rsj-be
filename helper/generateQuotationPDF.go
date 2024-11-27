@@ -13,7 +13,6 @@ import (
 	"github.com/johnfercher/maroto/v2/pkg/components/image"
 	"github.com/johnfercher/maroto/v2/pkg/components/list"
 	"github.com/johnfercher/maroto/v2/pkg/components/row"
-	"github.com/johnfercher/maroto/v2/pkg/components/signature"
 	"github.com/johnfercher/maroto/v2/pkg/components/text"
 	"github.com/johnfercher/maroto/v2/pkg/config"
 	"github.com/johnfercher/maroto/v2/pkg/consts/align"
@@ -120,7 +119,7 @@ func addInvoiceDetail(m core.Maroto, quotation models.Quotation) {
 				Align: align.Left,
 				Size:  12,
 			}),
-		text.NewCol(6, "Weight/Volume : "+fmt.Sprintf("%.3f kg / %.3f CBM", quotation.Weight, quotation.Volume),
+		text.NewCol(6, "Weight/Volume : "+fmt.Sprintf("%.2f kg / %.2f CBM", quotation.Weight, quotation.Volume),
 			props.Text{
 				Align: align.Left,
 				Size:  12,
@@ -339,63 +338,71 @@ func addNoteAndSignature(m core.Maroto, quotation models.Quotation) {
 
 	m.AddRow(5)
 
-	m.AddRow(5,
-		text.NewCol(12, "1.Semua biaya dan tarif yang tercantum harus dibayar dalam IDR (Rupiah Indonesia) sesuai tanggal Faktur.",
-			props.Text{
-				Align: align.Left,
-				Size:  10,
+	m.AddRow(100,
+		image.NewFromFileCol(12, "assets/signpdf.jpg",
+			props.Rect{
+				Center:  true,
+				Percent: 100,
 			}),
 	)
 
-	m.AddRow(5,
-		text.NewCol(12, "2.Importir ataupun Exportir wajib menyiapkan NPWP/NIB dan document pendukung lainnya.",
-			props.Text{
-				Align: align.Left,
-				Size:  10,
-			}),
-	)
+	// m.AddRow(5,
+	// 	text.NewCol(12, "1.Semua biaya dan tarif yang tercantum harus dibayar dalam IDR (Rupiah Indonesia) sesuai tanggal Faktur.",
+	// 		props.Text{
+	// 			Align: align.Left,
+	// 			Size:  10,
+	// 		}),
+	// )
 
-	m.AddRow(5,
-		text.NewCol(12, "3.Pengiriman tidak diasuransikan kecuali atas permintaan khusus dari customer.",
-			props.Text{
-				Align: align.Left,
-				Size:  10,
-			}),
-	)
+	// m.AddRow(5,
+	// 	text.NewCol(12, "2.Importir ataupun Exportir wajib menyiapkan NPWP/NIB dan document pendukung lainnya.",
+	// 		props.Text{
+	// 			Align: align.Left,
+	// 			Size:  10,
+	// 		}),
+	// )
 
-	m.AddRow(5,
-		text.NewCol(12, "4.Setiap Cancellation shipment wajib membayar Cancellation Fee jika ada.",
-			props.Text{
-				Align: align.Left,
-				Size:  10,
-			}),
-	)
+	// m.AddRow(5,
+	// 	text.NewCol(12, "3.Pengiriman tidak diasuransikan kecuali atas permintaan khusus dari customer.",
+	// 		props.Text{
+	// 			Align: align.Left,
+	// 			Size:  10,
+	// 		}),
+	// )
 
-	m.AddRow(5,
-		text.NewCol(12, "5.Semua harga diatas berlaku sesuai tanggal valid yang tersedia dan tidak mengikat jika sudah melebihi.",
-			props.Text{
-				Align: align.Left,
-				Size:  10,
-			}),
-	)
-	m.AddRow(5)
+	// m.AddRow(5,
+	// 	text.NewCol(12, "4.Setiap Cancellation shipment wajib membayar Cancellation Fee jika ada.",
+	// 		props.Text{
+	// 			Align: align.Left,
+	// 			Size:  10,
+	// 		}),
+	// )
 
-	m.AddRow(25,
-		text.NewCol(8, ""),
-		text.NewCol(4, "Approved By,",
-			props.Text{
-				Align: align.Center,
-				Size:  10,
-			}),
-	)
+	// m.AddRow(5,
+	// 	text.NewCol(12, "5.Semua harga diatas berlaku sesuai tanggal valid yang tersedia dan tidak mengikat jika sudah melebihi.",
+	// 		props.Text{
+	// 			Align: align.Left,
+	// 			Size:  10,
+	// 		}),
+	// )
+	// m.AddRow(5)
 
-	m.AddRow(5,
-		text.NewCol(8, ""),
-		signature.NewCol(4, "Martin Joman",
-			props.Signature{}),
-	)
+	// m.AddRow(25,
+	// 	text.NewCol(8, ""),
+	// 	text.NewCol(4, "Approved By,",
+	// 		props.Text{
+	// 			Align: align.Center,
+	// 			Size:  10,
+	// 		}),
+	// )
 
-	m.AddRow(10)
+	// m.AddRow(5,
+	// 	text.NewCol(8, ""),
+	// 	signature.NewCol(4, "Martin Joman",
+	// 		props.Signature{}),
+	// )
+
+	// m.AddRow(10)
 
 }
 
@@ -406,25 +413,26 @@ func addFooter() core.Row {
 		LineStyle:       linestyle.Solid,
 		BorderThickness: 1,
 	}
+
 	return row.New().Add(
 		col.New(3).Add(
 			text.New("021-6927181", props.Text{
 				Align: align.Left,
-				Top:   5,
+				Top:   10,
 				Size:  10,
 			}),
 		).WithStyle(rowStyle),
 		col.New(5).Add(
 			text.New("martin@radixsagarajomantara.com", props.Text{
 				Align: align.Left,
-				Top:   5,
+				Top:   10,
 				Size:  10,
 			}),
 		).WithStyle(rowStyle),
 		col.New(4).Add(
 			text.New("Jl.Teh no 3.C Tamansari Pinangsia, Jakarta Barat 11110 Indonesia", props.Text{
 				Align: align.Right,
-				Top:   5,
+				Top:   10,
 				Size:  10,
 			}),
 		).WithStyle(rowStyle),
