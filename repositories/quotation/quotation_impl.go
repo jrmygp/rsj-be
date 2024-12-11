@@ -74,7 +74,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (quot
 	result := r.db.Model(&models.Quotation{})
 
 	if searchQuery != "" {
-		result = result.Where("quotation_number LIKE ?", "%"+searchQuery+"%")
+		result = result.Where("quotation_number LIKE ? OR shipping_term LIKE ? OR service LIKE ?", "%"+searchQuery+"%", "%"+searchQuery+"%", "%"+searchQuery+"%")
 	}
 
 	result.Count(&totalCount)
