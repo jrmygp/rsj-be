@@ -2,7 +2,6 @@ package requests
 
 import (
 	"server/helper"
-	"time"
 )
 
 type ChargeRequest struct {
@@ -35,19 +34,19 @@ type CreateQuotationRequest struct {
 }
 
 type EditQuotationRequest struct {
-	QuotationNumber   string          `json:"quotationNumber"`
-	RateValidity      time.Time       `json:"rateValidity"`
-	ShippingTerm      string          `json:"shippingTerm"`
-	Service           string          `json:"service"`
-	Status            string          `json:"status"`
-	Commodity         string          `json:"commodity"`
-	Weight            float64         `json:"weight"`
-	Volume            float64         `json:"volume"`
-	Note              string          `json:"note"`
-	PaymentTerm       string          `json:"paymentTerm"`
-	SalesID           int             `json:"salesId"`
-	CustomerID        int             `json:"customerId"`
-	PortOfLoadingID   int             `json:"portOfLoadingId"`
-	PortOfDischargeID int             `json:"portOfDischargeId"`
-	ListCharges       []ChargeRequest `json:"listCharges"`
+	QuotationNumber   string            `json:"quotationNumber"`
+	RateValidity      helper.CustomDate `json:"rateValidity"`
+	ShippingTerm      string            `json:"shippingTerm"`
+	Service           string            `json:"service"`
+	Status            string            `json:"status"`
+	Commodity         string            `json:"commodity"`
+	Weight            float64           `json:"weight"`
+	Volume            float64           `json:"volume"`
+	Note              string            `json:"note"`
+	PaymentTerm       string            `json:"paymentTerm"`
+	SalesID           int               `json:"salesId"`
+	CustomerID        int               `json:"customerId"`
+	PortOfLoadingID   int               `json:"portOfLoadingId"`
+	PortOfDischargeID int               `json:"portOfDischargeId"`
+	ListCharges       []ChargeRequest   `json:"listCharges"`
 }

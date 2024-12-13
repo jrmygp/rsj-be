@@ -88,7 +88,7 @@ func (s *service) Edit(ID int, quotationRequest requests.EditQuotationRequest) (
 
 	// Check if RateValidity is not zero (not the zero value for time.Time)
 	if !quotationRequest.RateValidity.IsZero() {
-		quotation.RateValidity = quotationRequest.RateValidity
+		quotation.RateValidity = quotationRequest.RateValidity.Time
 	}
 
 	if quotationRequest.ShippingTerm != "" {

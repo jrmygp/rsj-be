@@ -31,3 +31,13 @@ type EditCostChargesRequest struct {
 	Name   string `json:"name"`
 	Status string `json:"status"`
 }
+
+type CreateShipperRequest struct {
+	Name    string `json:"name" binding:"required"`
+	Address string `json:"address" binding:"required"`
+}
+
+type EditShipperRequest struct {
+	Name    string `json:"name"`
+	Address string `json:"address"`
+}

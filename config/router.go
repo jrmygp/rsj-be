@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -63,6 +63,13 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		masterData.PATCH("/cost-charges/:id", costChargesController.EditCostCharge)
 		masterData.DELETE("/cost-charges/:id", costChargesController.DeleteCostCharge)
 
+		// Shipper routes
+		masterData.GET("/shipper/no-pagination", shipperController.FindAllShippersWithoutPagination)
+		masterData.GET("/shipper", shipperController.FindAll)
+		masterData.GET("/shipper/:id", shipperController.FindShipperByID)
+		masterData.POST("/shipper", shipperController.CreateShipper)
+		masterData.PATCH("/shipper/:id", shipperController.EditShipper)
+		masterData.DELETE("/shipper/:id", shipperController.DeleteShipper)
 	}
 
 	quotation := router.Group("/quotation")

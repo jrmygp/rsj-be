@@ -18,3 +18,9 @@ type CostCharges struct {
 	Name   string
 	Status string
 }
+
+type Shipper struct {
+	ID      int
+	Name    string
+	Address string `gorm:"type:text"`
+}
