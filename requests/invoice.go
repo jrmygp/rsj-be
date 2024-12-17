@@ -11,6 +11,7 @@ type InvoiceItemRequest struct {
 }
 
 type CreateInvoiceRequest struct {
+	Category      string               `json:"category" binding:"required"`
 	InvoiceNumber string               `json:"invoiceNumber"`
 	Type          string               `json:"type"`
 	CustomerID    int                  `json:"customerId"`
@@ -28,6 +29,7 @@ type CreateInvoiceRequest struct {
 }
 
 type EditInvoiceRequest struct {
+	Category      string               `json:"category"`
 	InvoiceNumber string               `json:"invoiceNumber"`
 	Type          string               `json:"type"`
 	CustomerID    int                  `json:"customerId"`

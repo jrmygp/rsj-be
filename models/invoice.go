@@ -34,6 +34,7 @@ func (jc *JSONInvoiceItems) Scan(value interface{}) error {
 type Invoice struct {
 	gorm.Model
 	ID            int
+	Category      string
 	InvoiceNumber string
 	Type          string
 	CustomerID    int `gorm:"foreignKey:CustomerID"`

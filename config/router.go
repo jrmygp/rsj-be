@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController, invoiceController *controllers.InvoiceController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -83,6 +83,19 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		quotation.PATCH("/:id", quotationController.EditQuotation)
 		quotation.DELETE("/:id", quotationController.DeleteQuotation)
 		quotation.GET("/generate-pdf/:id", quotationController.GeneratePDF)
+	}
+
+	invoice := router.Group("/invoice")
+	{
+		invoice.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+
+		invoice.GET("/no-pagination", invoiceController.FindAllInvoicesWithoutPagination)
+		invoice.GET("", invoiceController.FindAll)
+		invoice.GET("/:id", invoiceController.FindInvoiceByID)
+		invoice.POST("", invoiceController.CreateInvoice)
+		invoice.PATCH("/:id", invoiceController.EditInvoice)
+		invoice.DELETE("/:id", invoiceController.DeleteInvoice)
+		invoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
 	}
 
 	return router
