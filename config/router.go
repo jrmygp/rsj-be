@@ -98,5 +98,18 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		invoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
 	}
 
+	doorToDoorInvoice := router.Group("/door-to-door")
+	{
+		doorToDoorInvoice.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+
+		doorToDoorInvoice.GET("/no-pagination", invoiceController.FindAllDoorToDoorWithoutPagination)
+		doorToDoorInvoice.GET("", invoiceController.FindAllDoorToDoor)
+		doorToDoorInvoice.GET("/:id", invoiceController.FindDoorToDoorByID)
+		doorToDoorInvoice.POST("", invoiceController.CreateDoorToDoor)
+		doorToDoorInvoice.PATCH("/:id", invoiceController.EditDoorToDoor)
+		doorToDoorInvoice.DELETE("/:id", invoiceController.DeleteDoorToDoor)
+		doorToDoorInvoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
+	}
+
 	return router
 }

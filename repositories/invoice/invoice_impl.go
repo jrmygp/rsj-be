@@ -61,6 +61,66 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (invo
 	result := r.db.Model(&models.Invoice{})
 
 	if searchQuery != "" {
+		result = result.Where("invoice_number LIKE ? OR category LIKE ?", "%"+searchQuery+"%", "%"+searchQuery+"%")
+	}
+
+	result.Count(&totalCount)
+
+	result = result.Order("created_at DESC").Offset(offset).Limit(pageSize)
+
+	result.Preload("Customer").Preload("Shipper").Find(&invoice)
+
+	return invoice, totalCount
+}
+
+// Door to Door implementations
+func (r *repository) FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, error) {
+	var invoices []models.DoorToDoorInvoice
+	err := r.db.Preload("Customer").Preload("Shipper").Find(&invoices).Error
+
+	return invoices, err
+}
+
+func (r *repository) CreateDoorToDoor(invoice models.DoorToDoorInvoice) (models.DoorToDoorInvoice, error) {
+	err := r.db.Create(&invoice).Error
+	if err == nil {
+		err = r.db.Preload("Customer").Preload("Shipper").First(&invoice, invoice.ID).Error
+	}
+
+	return invoice, err
+}
+
+func (r *repository) FindDoorToDoorByID(ID int) (models.DoorToDoorInvoice, error) {
+	var invoice models.DoorToDoorInvoice
+
+	err := r.db.Preload("Customer").Preload("Shipper").First(&invoice, ID).Error
+
+	return invoice, err
+}
+
+func (r *repository) EditDoorToDoor(invoice models.DoorToDoorInvoice) (models.DoorToDoorInvoice, error) {
+	err := r.db.Save(&invoice).Error
+	if err == nil {
+		err = r.db.Preload("Customer").Preload("Shipper").First(&invoice, invoice.ID).Error
+	}
+
+	return invoice, err
+}
+
+func (r *repository) DeleteDoorToDoor(ID int) (models.DoorToDoorInvoice, error) {
+	var invoice models.DoorToDoorInvoice
+	if err := r.db.Preload("Customer").Preload("Shipper").First(&invoice, ID).Error; err != nil {
+		return invoice, err
+	}
+
+	err := r.db.Delete(&invoice).Error
+	return invoice, err
+}
+
+func (r *repository) FindAllDoorToDoor(searchQuery string, offset int, pageSize int) (invoice []models.DoorToDoorInvoice, totalCount int64) {
+	result := r.db.Model(&models.DoorToDoorInvoice{})
+
+	if searchQuery != "" {
 		result = result.Where("invoice_number LIKE ?", "%"+searchQuery+"%")
 	}
 

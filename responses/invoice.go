@@ -9,7 +9,6 @@ type InvoiceItemResponse struct {
 }
 
 type InvoiceResponse struct {
-	Category      string                `json:"category"`
 	ID            int                   `json:"id"`
 	InvoiceNumber string                `json:"invoiceNumber"`
 	Type          string                `json:"type"`
@@ -24,5 +23,24 @@ type InvoiceResponse struct {
 	ShippingMarks string                `json:"shippingMarks"`
 	InvoiceDate   string                `json:"invoiceDate"`
 	Status        string                `json:"status"`
+	InvoiceItems  []InvoiceItemResponse `json:"invoiceItems"`
+}
+
+type DoorToDoorResponse struct {
+	ID            int                   `json:"id"`
+	InvoiceNumber string                `json:"invoiceNumber"`
+	Type          string                `json:"type"`
+	CustomerID    int                   `json:"customerId"`
+	ConsigneeID   int                   `json:"consigneeId"`
+	ShipperID     int                   `json:"shipperId"`
+	Service       string                `json:"service"`
+	POL           string                `json:"pol"`
+	POD           string                `json:"pod"`
+	ShippingMarks string                `json:"shippingMarks"`
+	InvoiceDate   string                `json:"invoiceDate"`
+	Status        string                `json:"status"`
+	Quantity      int                   `json:"quantity"`
+	Weight        float64               `json:"weight"`
+	Volume        float64               `json:"volume"`
 	InvoiceItems  []InvoiceItemResponse `json:"invoiceItems"`
 }

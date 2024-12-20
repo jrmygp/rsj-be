@@ -45,3 +45,41 @@ type EditInvoiceRequest struct {
 	Status        string               `json:"status"`
 	InvoiceItems  []InvoiceItemRequest `json:"invoiceItems"`
 }
+
+type CreateDoorToDoorRequest struct {
+	Category      string               `json:"category" binding:"required"`
+	InvoiceNumber string               `json:"invoiceNumber"`
+	Type          string               `json:"type"`
+	CustomerID    int                  `json:"customerId"`
+	ConsigneeID   int                  `json:"consigneeId"`
+	ShipperID     int                  `json:"shipperId"`
+	Service       string               `json:"service"`
+	POL           string               `json:"pol"`
+	POD           string               `json:"pod"`
+	ShippingMarks string               `json:"shippingMarks"`
+	InvoiceDate   helper.CustomDate    `json:"invoiceDate"`
+	Status        string               `json:"status"`
+	Quantity      int                  `json:"quantity"`
+	Weight        float64              `json:"weight"`
+	Volume        float64              `json:"volume"`
+	InvoiceItems  []InvoiceItemRequest `json:"invoiceItems"`
+}
+
+type EditDoorToDoorRequest struct {
+	Category      string               `json:"category" binding:"required"`
+	InvoiceNumber string               `json:"invoiceNumber"`
+	Type          string               `json:"type"`
+	CustomerID    int                  `json:"customerId"`
+	ConsigneeID   int                  `json:"consigneeId"`
+	ShipperID     int                  `json:"shipperId"`
+	Service       string               `json:"service"`
+	POL           string               `json:"pol"`
+	POD           string               `json:"pod"`
+	ShippingMarks string               `json:"shippingMarks"`
+	InvoiceDate   helper.CustomDate    `json:"invoiceDate"`
+	Status        string               `json:"status"`
+	Quantity      int                  `json:"quantity"`
+	Weight        float64              `json:"weight"`
+	Volume        float64              `json:"volume"`
+	InvoiceItems  []InvoiceItemRequest `json:"invoiceItems"`
+}
