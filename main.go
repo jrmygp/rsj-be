@@ -49,7 +49,7 @@ func main() {
 	shipperController := controllers.NewShipperController(shipperService)
 
 	invoiceRepository := invoiceRepo.NewRepository(db)
-	invoiceService := invoiceService.NewService(invoiceRepository, customerRepository, shipperRepository)
+	invoiceService := invoiceService.NewService(invoiceRepository, customerRepository, shipperRepository, portRepository)
 	invoiceController := controllers.NewInvoiceController(invoiceService)
 
 	// Set up the router

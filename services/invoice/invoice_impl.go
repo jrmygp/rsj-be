@@ -5,6 +5,7 @@ import (
 	"server/models"
 	customerRepositories "server/repositories/customer"
 	repositories "server/repositories/invoice"
+	portRepositories "server/repositories/port"
 	shipperRepositories "server/repositories/shipper"
 	"server/requests"
 
@@ -15,10 +16,11 @@ type service struct {
 	repository         repositories.Repository
 	customerRepository customerRepositories.Repository
 	shipperRepository  shipperRepositories.Repository
+	portRepository     portRepositories.Repository
 }
 
-func NewService(repository repositories.Repository, customerRepository customerRepositories.Repository, shipperRepository shipperRepositories.Repository) *service {
-	return &service{repository, customerRepository, shipperRepository}
+func NewService(repository repositories.Repository, customerRepository customerRepositories.Repository, shipperRepository shipperRepositories.Repository, portRepository portRepositories.Repository) *service {
+	return &service{repository, customerRepository, shipperRepository, portRepository}
 }
 
 func (s *service) FindAllNoPagination() ([]models.Invoice, error) {
@@ -40,21 +42,21 @@ func (s *service) Create(invoiceRequest requests.CreateInvoiceRequest) (models.I
 	}
 
 	invoice := models.Invoice{
-		Category:      invoiceRequest.Category,
-		InvoiceNumber: invoiceRequest.InvoiceNumber,
-		Type:          invoiceRequest.Type,
-		CustomerID:    invoiceRequest.CustomerID,
-		ConsigneeID:   invoiceRequest.ConsigneeID,
-		ShipperID:     invoiceRequest.ShipperID,
-		Service:       invoiceRequest.Service,
-		BLAWB:         invoiceRequest.BLAWB,
-		AJU:           invoiceRequest.AJU,
-		POL:           invoiceRequest.POL,
-		POD:           invoiceRequest.POD,
-		ShippingMarks: invoiceRequest.ShippingMarks,
-		InvoiceDate:   invoiceRequest.InvoiceDate.Time,
-		Status:        invoiceRequest.Status,
-		InvoiceItems:  invoiceItems,
+		Category:          invoiceRequest.Category,
+		InvoiceNumber:     invoiceRequest.InvoiceNumber,
+		Type:              invoiceRequest.Type,
+		CustomerID:        invoiceRequest.CustomerID,
+		ConsigneeID:       invoiceRequest.ConsigneeID,
+		ShipperID:         invoiceRequest.ShipperID,
+		Service:           invoiceRequest.Service,
+		BLAWB:             invoiceRequest.BLAWB,
+		AJU:               invoiceRequest.AJU,
+		PortOfLoadingID:   invoiceRequest.PortOfLoadingID,
+		PortOfDischargeID: invoiceRequest.PortOfDischargeID,
+		ShippingMarks:     invoiceRequest.ShippingMarks,
+		InvoiceDate:       invoiceRequest.InvoiceDate.Time,
+		Status:            invoiceRequest.Status,
+		InvoiceItems:      invoiceItems,
 	}
 
 	newInvoice, err := s.repository.Create(invoice)
@@ -93,12 +95,6 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest) (mode
 	}
 	if invoiceRequest.AJU != "" {
 		invoice.AJU = invoiceRequest.AJU
-	}
-	if invoiceRequest.POL != "" {
-		invoice.POL = invoiceRequest.POL
-	}
-	if invoiceRequest.POD != "" {
-		invoice.POD = invoiceRequest.POD
 	}
 	if invoiceRequest.ShippingMarks != "" {
 		invoice.ShippingMarks = invoiceRequest.ShippingMarks
@@ -142,6 +138,28 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest) (mode
 		}
 		invoice.Shipper = shipper
 		invoice.ShipperID = invoiceRequest.ShipperID
+	}
+	if invoiceRequest.PortOfLoadingID != 0 {
+		port, err := s.portRepository.FindByID(invoiceRequest.PortOfLoadingID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.Invoice{}, errors.New("port not found")
+			}
+			return models.Invoice{}, err
+		}
+		invoice.PortOfLoading = port
+		invoice.PortOfLoadingID = invoiceRequest.PortOfLoadingID
+	}
+	if invoiceRequest.PortOfDischargeID != 0 {
+		port, err := s.portRepository.FindByID(invoiceRequest.PortOfDischargeID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.Invoice{}, errors.New("port not found")
+			}
+			return models.Invoice{}, err
+		}
+		invoice.PortOfDischarge = port
+		invoice.PortOfDischargeID = invoiceRequest.PortOfDischargeID
 	}
 
 	if len(invoiceRequest.InvoiceItems) > 0 {
@@ -214,21 +232,21 @@ func (s *service) CreateDoorToDoor(invoiceRequest requests.CreateDoorToDoorReque
 	}
 
 	invoice := models.DoorToDoorInvoice{
-		InvoiceNumber: invoiceRequest.InvoiceNumber,
-		Type:          invoiceRequest.Type,
-		CustomerID:    invoiceRequest.CustomerID,
-		ConsigneeID:   invoiceRequest.ConsigneeID,
-		ShipperID:     invoiceRequest.ShipperID,
-		Service:       invoiceRequest.Service,
-		POL:           invoiceRequest.POL,
-		POD:           invoiceRequest.POD,
-		ShippingMarks: invoiceRequest.ShippingMarks,
-		InvoiceDate:   invoiceRequest.InvoiceDate.Time,
-		Status:        invoiceRequest.Status,
-		Quantity:      invoiceRequest.Quantity,
-		Weight:        invoiceRequest.Weight,
-		Volume:        invoiceRequest.Volume,
-		InvoiceItems:  invoiceItems,
+		InvoiceNumber:     invoiceRequest.InvoiceNumber,
+		Type:              invoiceRequest.Type,
+		CustomerID:        invoiceRequest.CustomerID,
+		ConsigneeID:       invoiceRequest.ConsigneeID,
+		ShipperID:         invoiceRequest.ShipperID,
+		Service:           invoiceRequest.Service,
+		PortOfLoadingID:   invoiceRequest.PortOfLoadingID,
+		PortOfDischargeID: invoiceRequest.PortOfDischargeID,
+		ShippingMarks:     invoiceRequest.ShippingMarks,
+		InvoiceDate:       invoiceRequest.InvoiceDate.Time,
+		Status:            invoiceRequest.Status,
+		Quantity:          invoiceRequest.Quantity,
+		Weight:            invoiceRequest.Weight,
+		Volume:            invoiceRequest.Volume,
+		InvoiceItems:      invoiceItems,
 	}
 
 	newInvoice, err := s.repository.CreateDoorToDoor(invoice)
@@ -258,12 +276,6 @@ func (s *service) EditDoorToDoor(ID int, invoiceRequest requests.EditDoorToDoorR
 	}
 	if invoiceRequest.Service != "" {
 		invoice.Service = invoiceRequest.Service
-	}
-	if invoiceRequest.POL != "" {
-		invoice.POL = invoiceRequest.POL
-	}
-	if invoiceRequest.POD != "" {
-		invoice.POD = invoiceRequest.POD
 	}
 	if invoiceRequest.ShippingMarks != "" {
 		invoice.ShippingMarks = invoiceRequest.ShippingMarks
@@ -316,6 +328,28 @@ func (s *service) EditDoorToDoor(ID int, invoiceRequest requests.EditDoorToDoorR
 		}
 		invoice.Shipper = shipper
 		invoice.ShipperID = invoiceRequest.ShipperID
+	}
+	if invoiceRequest.PortOfLoadingID != 0 {
+		port, err := s.portRepository.FindByID(invoiceRequest.PortOfLoadingID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.DoorToDoorInvoice{}, errors.New("port not found")
+			}
+			return models.DoorToDoorInvoice{}, err
+		}
+		invoice.PortOfLoading = port
+		invoice.PortOfLoadingID = invoiceRequest.PortOfLoadingID
+	}
+	if invoiceRequest.PortOfDischargeID != 0 {
+		port, err := s.portRepository.FindByID(invoiceRequest.PortOfDischargeID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.DoorToDoorInvoice{}, errors.New("port not found")
+			}
+			return models.DoorToDoorInvoice{}, err
+		}
+		invoice.PortOfDischarge = port
+		invoice.PortOfDischargeID = invoiceRequest.PortOfDischargeID
 	}
 
 	if len(invoiceRequest.InvoiceItems) > 0 {

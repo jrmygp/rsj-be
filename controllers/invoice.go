@@ -35,21 +35,26 @@ func convertInvoiceResponse(o models.Invoice) responses.InvoiceResponse {
 	}
 
 	return responses.InvoiceResponse{
-		ID:            o.ID,
-		InvoiceNumber: o.InvoiceNumber,
-		Type:          o.Type,
-		CustomerID:    o.CustomerID,
-		ConsigneeID:   o.ConsigneeID,
-		ShipperID:     o.ShipperID,
-		Service:       o.Service,
-		BLAWB:         o.BLAWB,
-		AJU:           o.AJU,
-		POL:           o.POL,
-		POD:           o.POD,
-		ShippingMarks: o.ShippingMarks,
-		InvoiceDate:   o.InvoiceDate.Format("2006-01-02"),
-		Status:        o.Status,
-		InvoiceItems:  invoiceItemsResponse,
+		ID:                  o.ID,
+		InvoiceNumber:       o.InvoiceNumber,
+		Type:                o.Type,
+		CustomerID:          o.CustomerID,
+		CustomerName:        o.Customer.Name,
+		ConsigneeID:         o.ConsigneeID,
+		CosgineeName:        o.Consignee.Name,
+		ShipperID:           o.ShipperID,
+		ShipperName:         o.Shipper.Name,
+		Service:             o.Service,
+		BLAWB:               o.BLAWB,
+		AJU:                 o.AJU,
+		PortOfLoadingID:     o.PortOfLoadingID,
+		PortOfLoadingName:   o.PortOfLoading.PortName,
+		PortOfDischargeID:   o.PortOfDischargeID,
+		PortOfDischargeName: o.PortOfDischarge.PortName,
+		ShippingMarks:       o.ShippingMarks,
+		InvoiceDate:         o.InvoiceDate.Format("2006-01-02"),
+		Status:              o.Status,
+		InvoiceItems:        invoiceItemsResponse,
 	}
 }
 
@@ -68,22 +73,27 @@ func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorR
 	}
 
 	return responses.DoorToDoorResponse{
-		ID:            o.ID,
-		InvoiceNumber: o.InvoiceNumber,
-		Type:          o.Type,
-		CustomerID:    o.CustomerID,
-		ConsigneeID:   o.ConsigneeID,
-		ShipperID:     o.ShipperID,
-		Service:       o.Service,
-		POL:           o.POL,
-		POD:           o.POD,
-		ShippingMarks: o.ShippingMarks,
-		InvoiceDate:   o.InvoiceDate.Format("2006-01-02"),
-		Status:        o.Status,
-		Quantity:      o.Quantity,
-		Weight:        o.Weight,
-		Volume:        o.Volume,
-		InvoiceItems:  invoiceItemsResponse,
+		ID:                  o.ID,
+		InvoiceNumber:       o.InvoiceNumber,
+		Type:                o.Type,
+		CustomerID:          o.CustomerID,
+		CustomerName:        o.Customer.Name,
+		ConsigneeID:         o.ConsigneeID,
+		CosgineeName:        o.Consignee.Name,
+		ShipperID:           o.ShipperID,
+		ShipperName:         o.Shipper.Name,
+		Service:             o.Service,
+		PortOfLoadingID:     o.PortOfLoadingID,
+		PortOfLoadingName:   o.PortOfLoading.PortName,
+		PortOfDischargeID:   o.PortOfDischargeID,
+		PortOfDischargeName: o.PortOfDischarge.PortName,
+		ShippingMarks:       o.ShippingMarks,
+		InvoiceDate:         o.InvoiceDate.Format("2006-01-02"),
+		Status:              o.Status,
+		Quantity:            o.Quantity,
+		Weight:              o.Weight,
+		Volume:              o.Volume,
+		InvoiceItems:        invoiceItemsResponse,
 	}
 }
 
@@ -307,7 +317,7 @@ func (h *InvoiceController) GeneratePDF(c *gin.Context) {
 		})
 		return
 	}
-	filePath := fmt.Sprintf("pdf/invoice/invoice-%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
+	filePath := fmt.Sprintf("pdf/invoice/%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
 	// helper.GenerateQuotationPDF(invoice)
 
 	c.File(filePath)
@@ -534,7 +544,7 @@ func (h *InvoiceController) GenerateDoorToDoorPDF(c *gin.Context) {
 		})
 		return
 	}
-	filePath := fmt.Sprintf("pdf/invoice/invoice-%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
+	filePath := fmt.Sprintf("pdf/invoice/%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
 	// helper.GenerateQuotationPDF(invoice)
 
 	c.File(filePath)

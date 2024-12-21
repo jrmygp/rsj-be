@@ -288,7 +288,7 @@ func (h *QuotationController) GeneratePDF(c *gin.Context) {
 		})
 		return
 	}
-	filePath := fmt.Sprintf("pdf/quotation/invoice-%s.pdf", sanitizeFilename(quotation.QuotationNumber))
+	filePath := fmt.Sprintf("pdf/quotation/%s.pdf", sanitizeFilename(quotation.QuotationNumber))
 	helper.GenerateQuotationPDF(quotation)
 
 	c.File(filePath)

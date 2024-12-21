@@ -16,7 +16,7 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) FindAllNoPagination() ([]models.Invoice, error) {
 	var invoices []models.Invoice
-	err := r.db.Preload("Customer").Preload("Shipper").Find(&invoices).Error
+	err := r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&invoices).Error
 
 	return invoices, err
 }
@@ -24,7 +24,7 @@ func (r *repository) FindAllNoPagination() ([]models.Invoice, error) {
 func (r *repository) Create(invoice models.Invoice) (models.Invoice, error) {
 	err := r.db.Create(&invoice).Error
 	if err == nil {
-		err = r.db.Preload("Customer").Preload("Shipper").First(&invoice, invoice.ID).Error
+		err = r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, invoice.ID).Error
 	}
 
 	return invoice, err
@@ -33,7 +33,7 @@ func (r *repository) Create(invoice models.Invoice) (models.Invoice, error) {
 func (r *repository) FindByID(ID int) (models.Invoice, error) {
 	var invoice models.Invoice
 
-	err := r.db.Preload("Customer").Preload("Shipper").First(&invoice, ID).Error
+	err := r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, ID).Error
 
 	return invoice, err
 }
@@ -41,7 +41,7 @@ func (r *repository) FindByID(ID int) (models.Invoice, error) {
 func (r *repository) Edit(invoice models.Invoice) (models.Invoice, error) {
 	err := r.db.Save(&invoice).Error
 	if err == nil {
-		err = r.db.Preload("Customer").Preload("Shipper").First(&invoice, invoice.ID).Error
+		err = r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, invoice.ID).Error
 	}
 
 	return invoice, err
@@ -49,7 +49,7 @@ func (r *repository) Edit(invoice models.Invoice) (models.Invoice, error) {
 
 func (r *repository) Delete(ID int) (models.Invoice, error) {
 	var invoice models.Invoice
-	if err := r.db.Preload("Customer").Preload("Shipper").First(&invoice, ID).Error; err != nil {
+	if err := r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, ID).Error; err != nil {
 		return invoice, err
 	}
 
@@ -68,7 +68,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (invo
 
 	result = result.Order("created_at DESC").Offset(offset).Limit(pageSize)
 
-	result.Preload("Customer").Preload("Shipper").Find(&invoice)
+	result.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&invoice)
 
 	return invoice, totalCount
 }
@@ -76,7 +76,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (invo
 // Door to Door implementations
 func (r *repository) FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, error) {
 	var invoices []models.DoorToDoorInvoice
-	err := r.db.Preload("Customer").Preload("Shipper").Find(&invoices).Error
+	err := r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&invoices).Error
 
 	return invoices, err
 }
@@ -84,7 +84,7 @@ func (r *repository) FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice
 func (r *repository) CreateDoorToDoor(invoice models.DoorToDoorInvoice) (models.DoorToDoorInvoice, error) {
 	err := r.db.Create(&invoice).Error
 	if err == nil {
-		err = r.db.Preload("Customer").Preload("Shipper").First(&invoice, invoice.ID).Error
+		err = r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, invoice.ID).Error
 	}
 
 	return invoice, err
@@ -93,7 +93,7 @@ func (r *repository) CreateDoorToDoor(invoice models.DoorToDoorInvoice) (models.
 func (r *repository) FindDoorToDoorByID(ID int) (models.DoorToDoorInvoice, error) {
 	var invoice models.DoorToDoorInvoice
 
-	err := r.db.Preload("Customer").Preload("Shipper").First(&invoice, ID).Error
+	err := r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, ID).Error
 
 	return invoice, err
 }
@@ -101,7 +101,7 @@ func (r *repository) FindDoorToDoorByID(ID int) (models.DoorToDoorInvoice, error
 func (r *repository) EditDoorToDoor(invoice models.DoorToDoorInvoice) (models.DoorToDoorInvoice, error) {
 	err := r.db.Save(&invoice).Error
 	if err == nil {
-		err = r.db.Preload("Customer").Preload("Shipper").First(&invoice, invoice.ID).Error
+		err = r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, invoice.ID).Error
 	}
 
 	return invoice, err
@@ -109,7 +109,7 @@ func (r *repository) EditDoorToDoor(invoice models.DoorToDoorInvoice) (models.Do
 
 func (r *repository) DeleteDoorToDoor(ID int) (models.DoorToDoorInvoice, error) {
 	var invoice models.DoorToDoorInvoice
-	if err := r.db.Preload("Customer").Preload("Shipper").First(&invoice, ID).Error; err != nil {
+	if err := r.db.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").First(&invoice, ID).Error; err != nil {
 		return invoice, err
 	}
 
@@ -128,7 +128,7 @@ func (r *repository) FindAllDoorToDoor(searchQuery string, offset int, pageSize 
 
 	result = result.Order("created_at DESC").Offset(offset).Limit(pageSize)
 
-	result.Preload("Customer").Preload("Shipper").Find(&invoice)
+	result.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&invoice)
 
 	return invoice, totalCount
 }
