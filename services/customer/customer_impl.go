@@ -24,8 +24,9 @@ func (s *service) FindAllNoPagination() ([]models.Customer, error) {
 
 func (s *service) Create(customerRequest requests.CreateCustomerRequest) (models.Customer, error) {
 	customer := models.Customer{
-		Name:    customerRequest.Name,
-		Address: customerRequest.Address,
+		Name:        customerRequest.Name,
+		Address:     customerRequest.Address,
+		CompanyCode: customerRequest.CompanyCode,
 	}
 
 	newCustomer, err := s.repository.Create(customer)
@@ -50,6 +51,9 @@ func (s *service) Edit(ID int, customerRequest requests.EditCustomerRequest) (mo
 	}
 	if customerRequest.Address != "" {
 		customer.Address = customerRequest.Address
+	}
+	if customerRequest.CompanyCode != "" {
+		customer.CompanyCode = customerRequest.CompanyCode
 	}
 
 	updatedCustomer, err := s.repository.Edit(customer)

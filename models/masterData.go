@@ -1,9 +1,10 @@
 package models
 
 type Customer struct {
-	ID      int
-	Name    string
-	Address string `gorm:"type:text"`
+	ID          int
+	Name        string
+	Address     string `gorm:"type:text"`
+	CompanyCode string
 }
 
 type Port struct {

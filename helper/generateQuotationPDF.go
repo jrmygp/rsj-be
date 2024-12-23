@@ -25,7 +25,7 @@ import (
 	"github.com/johnfercher/maroto/v2/pkg/props"
 )
 
-func sanitizeFilename(filename string) string {
+func SanitizeFilename(filename string) string {
 	re := regexp.MustCompile(`[\/:*?"<>|]`)
 	return re.ReplaceAllString(filename, "_")
 }
@@ -53,11 +53,11 @@ func GenerateQuotationPDF(quotation models.Quotation) {
 	}
 
 	// Invoice Number
-	addInvoiceNumber(m, quotation)
+	addQuotationNumber(m, quotation)
 	// Invoice Detail
-	addInvoiceDetail(m, quotation)
+	addQuotationDetail(m, quotation)
 	// Item List
-	addItemList(m, quotation)
+	addQuotationItemList(m, quotation)
 	// Note and Signature
 	addNoteAndSignature(m, quotation)
 
@@ -66,10 +66,10 @@ func GenerateQuotationPDF(quotation models.Quotation) {
 		log.Fatal(err.Error())
 	}
 
-	safeQuotationNumber := sanitizeFilename(quotation.QuotationNumber)
+	safeQuotationNumber := SanitizeFilename(quotation.QuotationNumber)
 
 	// Use the sanitized QuotationNumber to name the file
-	filePath := fmt.Sprintf("pdf/quotation/invoice-%s.pdf", safeQuotationNumber)
+	filePath := fmt.Sprintf("pdf/quotation/%s.pdf", safeQuotationNumber)
 
 	err = document.Save(filePath)
 	if err != nil {
@@ -88,7 +88,7 @@ func addHeader() core.Row {
 	)
 }
 
-func addInvoiceNumber(m core.Maroto, quotation models.Quotation) {
+func addQuotationNumber(m core.Maroto, quotation models.Quotation) {
 	m.AddRow(5)
 	m.AddRow(10,
 		text.NewCol(6, "Reff No : "+quotation.QuotationNumber,
@@ -100,7 +100,7 @@ func addInvoiceNumber(m core.Maroto, quotation models.Quotation) {
 	m.AddRow(5)
 }
 
-func addInvoiceDetail(m core.Maroto, quotation models.Quotation) {
+func addQuotationDetail(m core.Maroto, quotation models.Quotation) {
 	m.AddRow(5,
 		text.NewCol(6, "To : "+quotation.Customer.Name,
 			props.Text{
@@ -251,7 +251,7 @@ func getObject(quotation models.Quotation) []QuotationItem {
 	return items
 }
 
-func addItemList(m core.Maroto, quotation models.Quotation) {
+func addQuotationItemList(m core.Maroto, quotation models.Quotation) {
 	rows, err := list.Build[QuotationItem](getObject(quotation))
 	if err != nil {
 		log.Fatal(err.Error())

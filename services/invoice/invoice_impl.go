@@ -191,7 +191,7 @@ func (s *service) Delete(ID int) (models.Invoice, error) {
 	return invoice, err
 }
 
-func (s *service) FindAll(searchQuery string, page int) ([]models.Invoice, int64, int, int, int) {
+func (s *service) FindAll(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.Invoice, int64, int, int, int) {
 	if page < 1 {
 		return []models.Invoice{}, 0, 0, 0, 0 // Handle invalid page
 	}
@@ -199,7 +199,7 @@ func (s *service) FindAll(searchQuery string, page int) ([]models.Invoice, int64
 	pageSize := 10
 	offset := (page - 1) * pageSize
 
-	invoice, totalCount := s.repository.FindAll(searchQuery, offset, pageSize)
+	invoice, totalCount := s.repository.FindAll(searchQuery, offset, pageSize, filter.CustomerID)
 
 	firstRow := offset + 1
 	lastRow := offset + len(invoice)
@@ -381,7 +381,7 @@ func (s *service) DeleteDoorToDoor(ID int) (models.DoorToDoorInvoice, error) {
 	return invoice, err
 }
 
-func (s *service) FindAllDoorToDoor(searchQuery string, page int) ([]models.DoorToDoorInvoice, int64, int, int, int) {
+func (s *service) FindAllDoorToDoor(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.DoorToDoorInvoice, int64, int, int, int) {
 	if page < 1 {
 		return []models.DoorToDoorInvoice{}, 0, 0, 0, 0 // Handle invalid page
 	}
@@ -389,7 +389,7 @@ func (s *service) FindAllDoorToDoor(searchQuery string, page int) ([]models.Door
 	pageSize := 10
 	offset := (page - 1) * pageSize
 
-	invoice, totalCount := s.repository.FindAllDoorToDoor(searchQuery, offset, pageSize)
+	invoice, totalCount := s.repository.FindAllDoorToDoor(searchQuery, offset, pageSize, filter.CustomerID)
 
 	firstRow := offset + 1
 	lastRow := offset + len(invoice)

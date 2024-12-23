@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"server/helper"
 	"server/models"
 	"server/requests"
 	"server/responses"
@@ -260,6 +261,16 @@ func (h *InvoiceController) DeleteInvoice(c *gin.Context) {
 }
 
 func (h *InvoiceController) FindAll(c *gin.Context) {
+	var filterForm requests.InvoiceFilterRequest
+
+	err := c.ShouldBindJSON(&filterForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	// Search
 	searchQuery := c.Query("search")
 
@@ -273,7 +284,7 @@ func (h *InvoiceController) FindAll(c *gin.Context) {
 
 	}
 
-	invoice, totalCount, firstRow, lastRow, totalPages := h.service.FindAll(searchQuery, page)
+	invoice, totalCount, firstRow, lastRow, totalPages := h.service.FindAll(searchQuery, page, filterForm)
 
 	var invoiceResponses []responses.InvoiceResponse
 	for _, invoice := range invoice {
@@ -318,7 +329,7 @@ func (h *InvoiceController) GeneratePDF(c *gin.Context) {
 		return
 	}
 	filePath := fmt.Sprintf("pdf/invoice/%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
-	// helper.GenerateQuotationPDF(invoice)
+	helper.GenerateInvoicePDF(invoice)
 
 	c.File(filePath)
 }
@@ -487,6 +498,16 @@ func (h *InvoiceController) DeleteDoorToDoor(c *gin.Context) {
 }
 
 func (h *InvoiceController) FindAllDoorToDoor(c *gin.Context) {
+	var filterForm requests.InvoiceFilterRequest
+
+	err := c.ShouldBindJSON(&filterForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	// Search
 	searchQuery := c.Query("search")
 
@@ -500,7 +521,7 @@ func (h *InvoiceController) FindAllDoorToDoor(c *gin.Context) {
 
 	}
 
-	invoice, totalCount, firstRow, lastRow, totalPages := h.service.FindAllDoorToDoor(searchQuery, page)
+	invoice, totalCount, firstRow, lastRow, totalPages := h.service.FindAllDoorToDoor(searchQuery, page, filterForm)
 
 	var invoiceResponses []responses.DoorToDoorResponse
 	for _, invoice := range invoice {

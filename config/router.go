@@ -90,9 +90,9 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		invoice.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
 
 		invoice.GET("/no-pagination", invoiceController.FindAllInvoicesWithoutPagination)
-		invoice.GET("", invoiceController.FindAll)
-		invoice.GET("/:id", invoiceController.FindInvoiceByID)
+		invoice.POST("/pagination", invoiceController.FindAll)
 		invoice.POST("", invoiceController.CreateInvoice)
+		invoice.GET("/:id", invoiceController.FindInvoiceByID)
 		invoice.PATCH("/:id", invoiceController.EditInvoice)
 		invoice.DELETE("/:id", invoiceController.DeleteInvoice)
 		invoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
@@ -103,7 +103,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		doorToDoorInvoice.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
 
 		doorToDoorInvoice.GET("/no-pagination", invoiceController.FindAllDoorToDoorWithoutPagination)
-		doorToDoorInvoice.GET("", invoiceController.FindAllDoorToDoor)
+		doorToDoorInvoice.POST("/pagination", invoiceController.FindAllDoorToDoor)
 		doorToDoorInvoice.GET("/:id", invoiceController.FindDoorToDoorByID)
 		doorToDoorInvoice.POST("", invoiceController.CreateDoorToDoor)
 		doorToDoorInvoice.PATCH("/:id", invoiceController.EditDoorToDoor)

@@ -21,9 +21,10 @@ func NewCustomerController(service services.Service) *CustomerController {
 
 func convertCustomerResponse(o models.Customer) responses.CustomerResponse {
 	return responses.CustomerResponse{
-		ID:      o.ID,
-		Name:    o.Name,
-		Address: o.Address,
+		ID:          o.ID,
+		Name:        o.Name,
+		Address:     o.Address,
+		CompanyCode: o.CompanyCode,
 	}
 }
 

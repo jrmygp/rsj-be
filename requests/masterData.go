@@ -1,13 +1,15 @@
 package requests
 
 type CreateCustomerRequest struct {
-	Name    string `json:"name" binding:"required"`
-	Address string `json:"address" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	Address     string `json:"address" binding:"required"`
+	CompanyCode string `json:"companyCode" binding:"required"`
 }
 
 type EditCustomerRequest struct {
-	Name    string `json:"name"`
-	Address string `json:"address"`
+	Name        string `json:"name"`
+	Address     string `json:"address"`
+	CompanyCode string `json:"companyCode"`
 }
 
 type CreatePortRequest struct {

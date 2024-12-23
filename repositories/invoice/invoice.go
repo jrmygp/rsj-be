@@ -8,12 +8,12 @@ type Repository interface {
 	FindByID(ID int) (models.Invoice, error)
 	Edit(invoice models.Invoice) (models.Invoice, error)
 	Delete(ID int) (models.Invoice, error)
-	FindAll(searchQuery string, offset int, pageSize int) (invoice []models.Invoice, totalCount int64)
+	FindAll(searchQuery string, offset int, pageSize int, customerID int) (invoice []models.Invoice, totalCount int64)
 
 	FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, error)
 	CreateDoorToDoor(invoice models.DoorToDoorInvoice) (models.DoorToDoorInvoice, error)
 	FindDoorToDoorByID(ID int) (models.DoorToDoorInvoice, error)
 	EditDoorToDoor(invoice models.DoorToDoorInvoice) (models.DoorToDoorInvoice, error)
 	DeleteDoorToDoor(ID int) (models.DoorToDoorInvoice, error)
-	FindAllDoorToDoor(searchQuery string, offset int, pageSize int) (invoice []models.DoorToDoorInvoice, totalCount int64)
+	FindAllDoorToDoor(searchQuery string, offset int, pageSize int, customerID int) (invoice []models.DoorToDoorInvoice, totalCount int64)
 }

@@ -57,8 +57,12 @@ func (r *repository) Delete(ID int) (models.Invoice, error) {
 	return invoice, err
 }
 
-func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (invoice []models.Invoice, totalCount int64) {
+func (r *repository) FindAll(searchQuery string, offset int, pageSize int, customerID int) (invoices []models.Invoice, totalCount int64) {
 	result := r.db.Model(&models.Invoice{})
+
+	if customerID > 0 {
+		result = result.Where("customer_id = ?", customerID)
+	}
 
 	if searchQuery != "" {
 		result = result.Where("invoice_number LIKE ? OR category LIKE ?", "%"+searchQuery+"%", "%"+searchQuery+"%")
@@ -66,11 +70,17 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (invo
 
 	result.Count(&totalCount)
 
-	result = result.Order("created_at DESC").Offset(offset).Limit(pageSize)
+	result.Order("created_at DESC").
+		Offset(offset).
+		Limit(pageSize).
+		Preload("Customer").
+		Preload("Shipper").
+		Preload("Consignee").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").
+		Find(&invoices)
 
-	result.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&invoice)
-
-	return invoice, totalCount
+	return invoices, totalCount
 }
 
 // Door to Door implementations
@@ -117,18 +127,28 @@ func (r *repository) DeleteDoorToDoor(ID int) (models.DoorToDoorInvoice, error) 
 	return invoice, err
 }
 
-func (r *repository) FindAllDoorToDoor(searchQuery string, offset int, pageSize int) (invoice []models.DoorToDoorInvoice, totalCount int64) {
+func (r *repository) FindAllDoorToDoor(searchQuery string, offset int, pageSize int, customerID int) (invoice []models.DoorToDoorInvoice, totalCount int64) {
 	result := r.db.Model(&models.DoorToDoorInvoice{})
 
+	if customerID > 0 {
+		result = result.Where("customer_id = ?", customerID)
+	}
+
 	if searchQuery != "" {
-		result = result.Where("invoice_number LIKE ?", "%"+searchQuery+"%")
+		result = result.Where("invoice_number LIKE ? OR category LIKE ?", "%"+searchQuery+"%", "%"+searchQuery+"%")
 	}
 
 	result.Count(&totalCount)
 
-	result = result.Order("created_at DESC").Offset(offset).Limit(pageSize)
-
-	result.Preload("Customer").Preload("Shipper").Preload("Consignee").Preload("PortOfLoading").Preload("PortOfDischarge").Find(&invoice)
+	result.Order("created_at DESC").
+		Offset(offset).
+		Limit(pageSize).
+		Preload("Customer").
+		Preload("Shipper").
+		Preload("Consignee").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").
+		Find(&invoice)
 
 	return invoice, totalCount
 }

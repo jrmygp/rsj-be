@@ -52,7 +52,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (cust
 	result := r.db.Model(&models.Customer{})
 
 	if searchQuery != "" {
-		result = result.Where("name LIKE ? OR address LIKE ?", "%"+searchQuery+"%", "%"+searchQuery+"%")
+		result = result.Where("name LIKE ? OR address LIKE ? OR company_code LIKE ?", "%"+searchQuery+"%", "%"+searchQuery+"%", "%"+searchQuery+"%")
 	}
 
 	result.Count(&totalCount)

@@ -1,9 +1,10 @@
 package responses
 
 type CustomerResponse struct {
-	ID      int    `json:"id"`
-	Name    string `json:"name"`
-	Address string `json:"address"`
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Address     string `json:"address"`
+	CompanyCode string `json:"companyCode"`
 }
 
 type PortResponse struct {
