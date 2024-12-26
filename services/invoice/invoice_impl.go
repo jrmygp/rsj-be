@@ -73,7 +73,7 @@ func (s *service) FindByID(ID int) (models.Invoice, error) {
 	return invoice, err
 }
 
-func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest) (models.Invoice, error) {
+func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userRoleID int) (models.Invoice, error) {
 	invoice, err := s.repository.FindByID(ID)
 	if err != nil {
 		return models.Invoice{}, err // Handle not found case
@@ -99,7 +99,10 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest) (mode
 	if invoiceRequest.ShippingMarks != "" {
 		invoice.ShippingMarks = invoiceRequest.ShippingMarks
 	}
-	if invoiceRequest.Status != "" {
+	if invoiceRequest.Status != "" && invoiceRequest.Status != invoice.Status {
+		if userRoleID != 1 {
+			return models.Invoice{}, errors.New("you have no access to change status")
+		}
 		invoice.Status = invoiceRequest.Status
 	}
 	// Check if InvoiceDate is not zero (not the zero value for time.Time)

@@ -217,7 +217,19 @@ func (h *InvoiceController) EditInvoice(c *gin.Context) {
 	idString := c.Param("id")
 	id, _ := strconv.Atoi(idString)
 
-	invoice, err := h.service.Edit(id, invoiceForm)
+	// Get user role from context
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, responses.Response{
+			Code:   http.StatusUnauthorized,
+			Status: "Unauthorized",
+			Data:   "User information missing",
+		})
+		return
+	}
+	userRoleID := int(user.(models.User).UserRoleID)
+
+	invoice, err := h.service.Edit(id, invoiceForm, userRoleID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
