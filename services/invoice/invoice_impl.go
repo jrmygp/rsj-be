@@ -36,7 +36,7 @@ func (s *service) Create(invoiceRequest requests.CreateInvoiceRequest) (models.I
 			ItemName: item.ItemName,
 			Currency: item.Currency,
 			Price:    item.Price,
-			Kurs:     *item.Kurs,
+			Kurs:     item.Kurs,
 			Quantity: item.Quantity,
 		}
 	}
@@ -172,7 +172,7 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 				ItemName: item.ItemName,
 				Currency: item.Currency,
 				Price:    item.Price,
-				Kurs:     *item.Kurs,
+				Kurs:     item.Kurs,
 				Quantity: item.Quantity,
 			}
 			jsonItems = append(jsonItems, item)
@@ -229,7 +229,7 @@ func (s *service) CreateDoorToDoor(invoiceRequest requests.CreateDoorToDoorReque
 			ItemName: item.ItemName,
 			Currency: item.Currency,
 			Price:    item.Price,
-			Kurs:     *item.Kurs,
+			Kurs:     item.Kurs,
 			Quantity: item.Quantity,
 		}
 	}
@@ -362,7 +362,7 @@ func (s *service) EditDoorToDoor(ID int, invoiceRequest requests.EditDoorToDoorR
 				ItemName: item.ItemName,
 				Currency: item.Currency,
 				Price:    item.Price,
-				Kurs:     *item.Kurs,
+				Kurs:     item.Kurs,
 				Quantity: item.Quantity,
 			}
 			jsonItems = append(jsonItems, item)

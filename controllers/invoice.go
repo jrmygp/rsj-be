@@ -29,7 +29,7 @@ func convertInvoiceResponse(o models.Invoice) responses.InvoiceResponse {
 			ItemName: item.ItemName,
 			Currency: item.Currency,
 			Price:    item.Price,
-			Kurs:     &item.Kurs,
+			Kurs:     item.Kurs,
 			Quantity: item.Quantity,
 		}
 		invoiceItemsResponse = append(invoiceItemsResponse, itemResponse)
@@ -67,7 +67,7 @@ func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorR
 			ItemName: item.ItemName,
 			Currency: item.Currency,
 			Price:    item.Price,
-			Kurs:     &item.Kurs,
+			Kurs:     item.Kurs,
 			Quantity: item.Quantity,
 		}
 		invoiceItemsResponse = append(invoiceItemsResponse, itemResponse)

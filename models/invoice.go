@@ -10,11 +10,11 @@ import (
 )
 
 type InvoiceItem struct {
-	ItemName string  `json:"itemName"`
-	Currency string  `json:"currency"`
-	Price    float64 `json:"price"`
-	Kurs     float64 `json:"kurs"`
-	Quantity int     `json:"quantity"`
+	ItemName string   `json:"itemName"`
+	Currency string   `json:"currency"`
+	Price    float64  `json:"price"`
+	Kurs     *float64 `json:"kurs"`
+	Quantity int      `json:"quantity"`
 }
 
 type JSONInvoiceItems []InvoiceItem
