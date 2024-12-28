@@ -202,7 +202,7 @@ func (s *service) FindAll(searchQuery string, page int, filter requests.InvoiceF
 	pageSize := 10
 	offset := (page - 1) * pageSize
 
-	invoice, totalCount := s.repository.FindAll(searchQuery, offset, pageSize, filter.CustomerID)
+	invoice, totalCount := s.repository.FindAll(searchQuery, offset, pageSize, filter.CustomerID, filter.Category)
 
 	firstRow := offset + 1
 	lastRow := offset + len(invoice)

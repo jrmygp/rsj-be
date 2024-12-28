@@ -3,7 +3,8 @@ package requests
 import "server/helper"
 
 type InvoiceFilterRequest struct {
-	CustomerID int `json:"customerId"`
+	CustomerID int    `json:"customerId"`
+	Category   string `json:"category" binding:"required"`
 }
 
 type InvoiceItemRequest struct {

@@ -57,11 +57,15 @@ func (r *repository) Delete(ID int) (models.Invoice, error) {
 	return invoice, err
 }
 
-func (r *repository) FindAll(searchQuery string, offset int, pageSize int, customerID int) (invoices []models.Invoice, totalCount int64) {
+func (r *repository) FindAll(searchQuery string, offset int, pageSize int, customerID int, category string) (invoices []models.Invoice, totalCount int64) {
 	result := r.db.Model(&models.Invoice{})
 
 	if customerID > 0 {
 		result = result.Where("customer_id = ?", customerID)
+	}
+
+	if category != "" {
+		result = result.Where("category = ?", category)
 	}
 
 	if searchQuery != "" {
