@@ -577,8 +577,8 @@ func (h *InvoiceController) GenerateDoorToDoorPDF(c *gin.Context) {
 		})
 		return
 	}
-	filePath := fmt.Sprintf("pdf/invoice/%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
-	// helper.GenerateQuotationPDF(invoice)
+	filePath := fmt.Sprintf("pdf/invoice-d2d/%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
+	helper.GenerateInvoiceD2DPDF(invoice)
 
 	c.File(filePath)
 }

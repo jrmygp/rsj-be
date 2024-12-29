@@ -49,7 +49,7 @@ type DoorToDoorResponse struct {
 	ShippingMarks       string                `json:"shippingMarks"`
 	InvoiceDate         string                `json:"invoiceDate"`
 	Status              string                `json:"status"`
-	Quantity            int                   `json:"quantity"`
+	Quantity            string                `json:"quantity"`
 	Weight              float64               `json:"weight"`
 	Volume              float64               `json:"volume"`
 	InvoiceItems        []InvoiceItemResponse `json:"invoiceItems"`

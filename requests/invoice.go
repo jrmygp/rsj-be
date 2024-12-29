@@ -64,7 +64,7 @@ type CreateDoorToDoorRequest struct {
 	ShippingMarks     string               `json:"shippingMarks"`
 	InvoiceDate       helper.CustomDate    `json:"invoiceDate"`
 	Status            string               `json:"status"`
-	Quantity          int                  `json:"quantity"`
+	Quantity          string               `json:"quantity"`
 	Weight            float64              `json:"weight"`
 	Volume            float64              `json:"volume"`
 	InvoiceItems      []InvoiceItemRequest `json:"invoiceItems"`
@@ -83,7 +83,7 @@ type EditDoorToDoorRequest struct {
 	ShippingMarks     string               `json:"shippingMarks"`
 	InvoiceDate       helper.CustomDate    `json:"invoiceDate"`
 	Status            string               `json:"status"`
-	Quantity          int                  `json:"quantity"`
+	Quantity          string               `json:"quantity"`
 	Weight            float64              `json:"weight"`
 	Volume            float64              `json:"volume"`
 	InvoiceItems      []InvoiceItemRequest `json:"invoiceItems"`

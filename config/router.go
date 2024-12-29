@@ -108,7 +108,7 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		doorToDoorInvoice.POST("", invoiceController.CreateDoorToDoor)
 		doorToDoorInvoice.PATCH("/:id", invoiceController.EditDoorToDoor)
 		doorToDoorInvoice.DELETE("/:id", invoiceController.DeleteDoorToDoor)
-		doorToDoorInvoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
+		doorToDoorInvoice.GET("/generate-pdf/:id", invoiceController.GenerateDoorToDoorPDF)
 	}
 
 	return router

@@ -77,7 +77,7 @@ type DoorToDoorInvoice struct {
 	ShippingMarks     string
 	InvoiceDate       time.Time
 	Status            string
-	Quantity          int
+	Quantity          string
 	Weight            float64
 	Volume            float64
 	InvoiceItems      JSONInvoiceItems `gorm:"type:json"`

@@ -286,7 +286,7 @@ func (s *service) EditDoorToDoor(ID int, invoiceRequest requests.EditDoorToDoorR
 	if invoiceRequest.Status != "" {
 		invoice.Status = invoiceRequest.Status
 	}
-	if invoiceRequest.Quantity != 0 {
+	if invoiceRequest.Quantity != "" {
 		invoice.Quantity = invoiceRequest.Quantity
 	}
 	if invoiceRequest.Weight != 0 {
