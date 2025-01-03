@@ -28,6 +28,7 @@ type InvoiceResponse struct {
 	ShippingMarks       string                `json:"shippingMarks"`
 	InvoiceDate         string                `json:"invoiceDate"`
 	Status              string                `json:"status"`
+	Nominal             float64               `json:"nominal"`
 	InvoiceItems        []InvoiceItemResponse `json:"invoiceItems"`
 }
 
@@ -52,5 +53,6 @@ type DoorToDoorResponse struct {
 	Quantity            string                `json:"quantity"`
 	Weight              float64               `json:"weight"`
 	Volume              float64               `json:"volume"`
+	Nominal             float64               `json:"nominal"`
 	InvoiceItems        []InvoiceItemResponse `json:"invoiceItems"`
 }

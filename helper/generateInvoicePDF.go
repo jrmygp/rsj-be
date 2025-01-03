@@ -200,7 +200,7 @@ func CalculateTotalAndSpell(invoiceItems []models.InvoiceItem) string {
 
 	// Convert total to words in Indonesian
 	spelledTotal := ntw.IntegerToIDID(int(totalIDR)) + " rupiah"
-	return spelledTotal
+	return strings.ToUpper(spelledTotal)
 }
 
 func priceSpellingSection(m core.Maroto, invoice models.Invoice) {
@@ -214,7 +214,7 @@ func priceSpellingSection(m core.Maroto, invoice models.Invoice) {
 			// Place the spelling here
 			text.New("# "+CalculateTotalAndSpell(invoice.InvoiceItems)+" #", props.Text{
 				Left:  40,
-				Style: fontstyle.BoldItalic,
+				Style: fontstyle.Bold,
 				Size:  12,
 			}),
 		))

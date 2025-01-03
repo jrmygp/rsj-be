@@ -4,7 +4,7 @@ import "server/helper"
 
 type InvoiceFilterRequest struct {
 	CustomerID int    `json:"customerId"`
-	Category   string `json:"category" binding:"required"`
+	Category   string `json:"category"`
 }
 
 type InvoiceItemRequest struct {
@@ -52,7 +52,6 @@ type EditInvoiceRequest struct {
 }
 
 type CreateDoorToDoorRequest struct {
-	Category          string               `json:"category" binding:"required"`
 	InvoiceNumber     string               `json:"invoiceNumber"`
 	Type              string               `json:"type"`
 	CustomerID        int                  `json:"customerId"`
@@ -71,7 +70,6 @@ type CreateDoorToDoorRequest struct {
 }
 
 type EditDoorToDoorRequest struct {
-	Category          string               `json:"category" binding:"required"`
 	InvoiceNumber     string               `json:"invoiceNumber"`
 	Type              string               `json:"type"`
 	CustomerID        int                  `json:"customerId"`

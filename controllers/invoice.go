@@ -23,8 +23,19 @@ func NewInvoiceController(service services.Service) *InvoiceController {
 
 func convertInvoiceResponse(o models.Invoice) responses.InvoiceResponse {
 	var invoiceItemsResponse []responses.InvoiceItemResponse
+	var nominal float64
 
 	for _, item := range o.InvoiceItems {
+		// Convert Quantity to float64 for the calculation
+		quantity := float64(item.Quantity)
+
+		// Calculate the subtotal for the current item
+		subTotal := item.Price * quantity
+		if item.Kurs != nil {
+			subTotal *= *item.Kurs // Multiply by Kurs if it's not nil
+		}
+		nominal += subTotal // Add to the total nominal value
+
 		itemResponse := responses.InvoiceItemResponse{
 			ItemName: item.ItemName,
 			Currency: item.Currency,
@@ -56,13 +67,23 @@ func convertInvoiceResponse(o models.Invoice) responses.InvoiceResponse {
 		InvoiceDate:         o.InvoiceDate.Format("2006-01-02"),
 		Status:              o.Status,
 		InvoiceItems:        invoiceItemsResponse,
+		Nominal:             nominal,
 	}
 }
 
 func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorResponse {
 	var invoiceItemsResponse []responses.InvoiceItemResponse
+	var nominal float64
 
 	for _, item := range o.InvoiceItems {
+		quantity := float64(item.Quantity)
+
+		subTotal := item.Price * quantity
+		if item.Kurs != nil {
+			subTotal *= *item.Kurs
+		}
+		nominal += subTotal
+
 		itemResponse := responses.InvoiceItemResponse{
 			ItemName: item.ItemName,
 			Currency: item.Currency,
@@ -95,6 +116,7 @@ func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorR
 		Weight:              o.Weight,
 		Volume:              o.Volume,
 		InvoiceItems:        invoiceItemsResponse,
+		Nominal:             nominal,
 	}
 }
 
