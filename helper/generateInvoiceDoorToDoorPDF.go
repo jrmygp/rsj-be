@@ -158,7 +158,7 @@ func customerSectionD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 }
 
 // Function to calculate total in IDR and spell it
-func CalculateTotalAndSpellD2D(invoiceItems []models.InvoiceItem) string {
+func CalculateTotalAndSpellD2D(invoiceItems []models.InvoiceD2DItem) string {
 	var totalIDR float64
 
 	// Loop through invoice items to calculate total in IDR

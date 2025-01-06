@@ -72,7 +72,7 @@ func convertInvoiceResponse(o models.Invoice) responses.InvoiceResponse {
 }
 
 func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorResponse {
-	var invoiceItemsResponse []responses.InvoiceItemResponse
+	var invoiceItemsResponse []responses.InvoiceD2DItemResponse
 	var nominal float64
 
 	for _, item := range o.InvoiceItems {
@@ -84,7 +84,7 @@ func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorR
 		}
 		nominal += subTotal
 
-		itemResponse := responses.InvoiceItemResponse{
+		itemResponse := responses.InvoiceD2DItemResponse{
 			ItemName: item.ItemName,
 			Currency: item.Currency,
 			Price:    item.Price,

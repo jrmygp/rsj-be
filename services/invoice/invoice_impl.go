@@ -38,6 +38,7 @@ func (s *service) Create(invoiceRequest requests.CreateInvoiceRequest) (models.I
 			Price:    item.Price,
 			Kurs:     item.Kurs,
 			Quantity: item.Quantity,
+			Unit:     item.Unit,
 		}
 	}
 
@@ -174,6 +175,7 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 				Price:    item.Price,
 				Kurs:     item.Kurs,
 				Quantity: item.Quantity,
+				Unit:     item.Unit,
 			}
 			jsonItems = append(jsonItems, item)
 		}
@@ -223,9 +225,9 @@ func (s *service) FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, e
 }
 
 func (s *service) CreateDoorToDoor(invoiceRequest requests.CreateDoorToDoorRequest) (models.DoorToDoorInvoice, error) {
-	invoiceItems := make([]models.InvoiceItem, len(invoiceRequest.InvoiceItems))
+	invoiceItems := make([]models.InvoiceD2DItem, len(invoiceRequest.InvoiceItems))
 	for i, item := range invoiceRequest.InvoiceItems {
-		invoiceItems[i] = models.InvoiceItem{
+		invoiceItems[i] = models.InvoiceD2DItem{
 			ItemName: item.ItemName,
 			Currency: item.Currency,
 			Price:    item.Price,
@@ -356,9 +358,9 @@ func (s *service) EditDoorToDoor(ID int, invoiceRequest requests.EditDoorToDoorR
 	}
 
 	if len(invoiceRequest.InvoiceItems) > 0 {
-		var jsonItems models.JSONInvoiceItems //
+		var jsonItems models.JSONInvoiceD2DItems //
 		for _, item := range invoiceRequest.InvoiceItems {
-			item := models.InvoiceItem{
+			item := models.InvoiceD2DItem{
 				ItemName: item.ItemName,
 				Currency: item.Currency,
 				Price:    item.Price,

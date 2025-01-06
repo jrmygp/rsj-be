@@ -15,15 +15,37 @@ type InvoiceItem struct {
 	Price    float64  `json:"price"`
 	Kurs     *float64 `json:"kurs"`
 	Quantity int      `json:"quantity"`
+	Unit     string   `json:"unit"`
+}
+
+type InvoiceD2DItem struct {
+	ItemName string   `json:"itemName"`
+	Currency string   `json:"currency"`
+	Price    float64  `json:"price"`
+	Kurs     *float64 `json:"kurs"`
+	Quantity int      `json:"quantity"`
 }
 
 type JSONInvoiceItems []InvoiceItem
+type JSONInvoiceD2DItems []InvoiceD2DItem
 
 func (jc JSONInvoiceItems) Value() (driver.Value, error) {
 	return json.Marshal(jc)
 }
 
 func (jc *JSONInvoiceItems) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+	return json.Unmarshal(bytes, jc)
+}
+
+func (jc JSONInvoiceD2DItems) Value() (driver.Value, error) {
+	return json.Marshal(jc)
+}
+
+func (jc *JSONInvoiceD2DItems) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)
 	if !ok {
 		return errors.New("type assertion to []byte failed")
@@ -80,5 +102,5 @@ type DoorToDoorInvoice struct {
 	Quantity          string
 	Weight            float64
 	Volume            float64
-	InvoiceItems      JSONInvoiceItems `gorm:"type:json"`
+	InvoiceItems      JSONInvoiceD2DItems `gorm:"type:json"`
 }

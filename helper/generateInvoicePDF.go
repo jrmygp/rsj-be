@@ -272,8 +272,8 @@ func (o InvoiceItem) GetHeader() core.Row {
 	}
 
 	return row.New().Add(
-		text.NewCol(3, "Item", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
-		text.NewCol(1, "Qty", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
+		text.NewCol(2, "Item", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
+		text.NewCol(2, "Qty", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
 		text.NewCol(2, "Kurs", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
 		text.NewCol(3, "Price", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
 		text.NewCol(3, "Sub Total", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
@@ -288,8 +288,8 @@ func (o InvoiceItem) GetContent(i int) core.Row {
 	}
 
 	r := row.New().Add(
-		text.NewCol(3, o.Item, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
-		text.NewCol(1, o.Qty, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
+		text.NewCol(2, o.Item, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
+		text.NewCol(2, o.Qty, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
 		text.NewCol(2, o.Kurs, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
 		text.NewCol(3, o.Price, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
 		text.NewCol(3, o.SubTotal, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2}).WithStyle(rowStyle),
@@ -311,7 +311,7 @@ func getInvoiceObject(invoice models.Invoice) []InvoiceItem {
 
 		items = append(items, InvoiceItem{
 			Item: item.ItemName,
-			Qty:  FormatThousandSeparatorInt(item.Quantity),
+			Qty:  FormatThousandSeparatorInt(item.Quantity) + " " + item.Unit,
 			Kurs: func() string {
 				if item.Kurs != nil {
 					return "Rp " + string(FormatThousandSeparatorFloat(*item.Kurs))
