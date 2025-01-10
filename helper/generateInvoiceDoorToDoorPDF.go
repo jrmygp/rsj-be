@@ -16,6 +16,7 @@ import (
 	"github.com/johnfercher/maroto/v2/pkg/components/text"
 	"github.com/johnfercher/maroto/v2/pkg/config"
 	"github.com/johnfercher/maroto/v2/pkg/consts/align"
+	"github.com/johnfercher/maroto/v2/pkg/consts/fontfamily"
 	"github.com/johnfercher/maroto/v2/pkg/consts/fontstyle"
 	"github.com/johnfercher/maroto/v2/pkg/consts/orientation"
 	"github.com/johnfercher/maroto/v2/pkg/consts/pagesize"
@@ -31,7 +32,7 @@ func GenerateInvoiceD2DPDF(invoice models.DoorToDoorInvoice) {
 		WithLeftMargin(15).
 		WithTopMargin(0).
 		WithRightMargin(15).
-		WithBottomMargin(5).
+		WithBottomMargin(10).
 		Build()
 	m := maroto.New(cfg)
 
@@ -85,45 +86,57 @@ func addInvoiceNumberD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 	m.AddRow(20,
 		col.New(4).Add(
 			text.New("No Invoice", props.Text{
-				Align: align.Left,
-				Style: fontstyle.Bold,
+				Align:  align.Left,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
+				Size:   12,
 			}),
 			text.New(invoice.InvoiceNumber, props.Text{
-				Top:   4,
-				Align: align.Left,
-				Style: fontstyle.Bold,
+				Top:    5,
+				Align:  align.Left,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
+				Size:   12,
 			}),
 		),
 		col.New(4).Add(
 			text.New("FAKTUR", props.Text{
-				Align: align.Center,
-				Style: fontstyle.Bold,
+				Align:  align.Center,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
+				Size:   13,
 			}),
 			text.New("INVOICE", props.Text{
-				Top:   4,
-				Align: align.Center,
-				Style: fontstyle.BoldItalic,
+				Top:    5,
+				Align:  align.Center,
+				Style:  fontstyle.BoldItalic,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 		),
 		col.New(4).Add(
 			text.New("JL. Teh No. 3 - C", props.Text{
-				Align: align.Right,
-				Style: fontstyle.Bold,
+				Align:  align.Right,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 			text.New("TELP. : 021-6927181", props.Text{
-				Top:   4,
-				Align: align.Right,
-				Style: fontstyle.Bold,
+				Top:    4,
+				Align:  align.Right,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 			text.New("FAX : (62-21) 6916336", props.Text{
-				Top:   8,
-				Align: align.Right,
-				Style: fontstyle.Bold,
+				Top:    8,
+				Align:  align.Right,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 			text.New("JAKARTA 11110 - INDONESIA", props.Text{
-				Top:   12,
-				Align: align.Right,
-				Style: fontstyle.Bold,
+				Top:    12,
+				Align:  align.Right,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 		),
 	)
@@ -133,24 +146,38 @@ func addInvoiceNumberD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 
 func customerSectionD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 	m.AddRow(15,
-		col.New(6).Add(
-			text.New("Sudah diterima dari :"),
+		col.New(8).Add(
+			text.New("Sudah diterima dari :", props.Text{
+				Family: fontfamily.Courier,
+				Size:   11,
+			}),
 			text.New("Received from", props.Text{
-				Top:   5,
-				Style: fontstyle.Italic,
+				Top:    5,
+				Style:  fontstyle.Italic,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 			text.New(invoice.Customer.Name, props.Text{
-				Left: 40,
+				Left:   51,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 		),
-		col.New(6).Add(
-			text.New("Alamat :"),
+		col.New(4).Add(
+			text.New("Alamat :", props.Text{
+				Family: fontfamily.Courier,
+				Size:   11,
+			}),
 			text.New("Address", props.Text{
-				Top:   5,
-				Style: fontstyle.Italic,
+				Top:    5,
+				Style:  fontstyle.Italic,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 			text.New(invoice.Customer.Address, props.Text{
-				Left: 20,
+				Left:   20,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 		))
 	m.AddRow(5, line.NewCol(12, props.Line{SizePercent: 100}))
@@ -186,9 +213,10 @@ func priceSpellingSectionD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 			}),
 			// Place the spelling here
 			text.New("# "+CalculateTotalAndSpellD2D(invoice.InvoiceItems)+" #", props.Text{
-				Left:  40,
-				Style: fontstyle.BoldItalic,
-				Size:  12,
+				Left:   40,
+				Style:  fontstyle.BoldItalic,
+				Size:   12,
+				Family: fontfamily.Courier,
 			}),
 		))
 	m.AddRow(5, line.NewCol(12, props.Line{SizePercent: 100}))
@@ -205,27 +233,45 @@ func addInvoiceDetailD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 			}),
 		),
 		col.New(6).Add(
-			text.New(invoice.Type),
+			text.New(invoice.Type, props.Text{
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
+				Size:   11,
+			}),
 			text.New("POL : "+invoice.PortOfLoading.PortName, props.Text{
-				Top: 5,
+				Top:    5,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 			text.New("POD : "+invoice.PortOfDischarge.PortName, props.Text{
-				Top: 10,
+				Top:    10,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 			text.New("QTY : "+invoice.Quantity, props.Text{
-				Top: 15,
+				Top:    15,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
-			text.New("Weight : "+FormatThousandSeparatorFloat(invoice.Weight), props.Text{
-				Top: 20,
+			text.New("Weight : "+FormatThousandSeparatorFloat(invoice.Weight)+" kg", props.Text{
+				Top:    20,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
-			text.New("Volume : "+FormatThousandSeparatorFloat(invoice.Volume), props.Text{
-				Top: 25,
+			text.New("Volume : "+FormatThousandSeparatorFloat(invoice.Volume)+" cbm", props.Text{
+				Top:    25,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 			text.New("Shipper : "+invoice.Shipper.Name, props.Text{
-				Top: 30,
+				Top:    30,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 			text.New("Remarks : "+invoice.ShippingMarks, props.Text{
-				Top: 35,
+				Top:    35,
+				Family: fontfamily.Courier,
+				Size:   11,
 			}),
 		))
 
@@ -282,26 +328,30 @@ func addInvoiceItemListD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 	m.AddRow(5)
 
 	m.AddRow(6,
-		text.NewCol(9, "SUBTOTAL", props.Text{
-			Align: align.Left,
-			Style: fontstyle.Bold,
-			Size:  14,
+		text.NewCol(8, "SUBTOTAL", props.Text{
+			Align:  align.Left,
+			Style:  fontstyle.Bold,
+			Size:   14,
+			Family: fontfamily.Courier,
 		}),
-		text.NewCol(3, "Rp "+FormatThousandSeparatorFloat(totalIDR), props.Text{
-			Align: align.Left,
-			Style: fontstyle.Bold,
-			Size:  14,
+		text.NewCol(4, "Rp "+FormatThousandSeparatorFloat(totalIDR), props.Text{
+			Align:  align.Right,
+			Style:  fontstyle.Bold,
+			Size:   14,
+			Family: fontfamily.Courier,
 		}),
 	)
 
 	m.AddRow(6,
-		text.NewCol(9, "VAT", props.Text{
-			Align: align.Left,
-			Size:  14,
+		text.NewCol(8, "VAT", props.Text{
+			Align:  align.Left,
+			Size:   14,
+			Family: fontfamily.Courier,
 		}),
-		text.NewCol(3, "Rp 0", props.Text{
-			Align: align.Left,
-			Size:  14,
+		text.NewCol(4, "0", props.Text{
+			Align:  align.Right,
+			Size:   14,
+			Family: fontfamily.Courier,
 		}),
 	)
 
@@ -310,15 +360,17 @@ func addInvoiceItemListD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 	m.AddRow(1, line.NewCol(12, props.Line{SizePercent: 100}))
 
 	m.AddRow(6,
-		text.NewCol(9, "TOTAL", props.Text{
-			Align: align.Left,
-			Style: fontstyle.Bold,
-			Size:  14,
+		text.NewCol(8, "TOTAL", props.Text{
+			Align:  align.Left,
+			Style:  fontstyle.Bold,
+			Size:   14,
+			Family: fontfamily.Courier,
 		}),
-		text.NewCol(3, "Rp "+FormatThousandSeparatorFloat(totalIDR), props.Text{
-			Align: align.Left,
-			Style: fontstyle.Bold,
-			Size:  14,
+		text.NewCol(4, "Rp "+FormatThousandSeparatorFloat(totalIDR), props.Text{
+			Align:  align.Right,
+			Style:  fontstyle.Bold,
+			Size:   14,
+			Family: fontfamily.Courier,
 		}),
 	)
 
@@ -327,39 +379,52 @@ func addInvoiceItemListD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 func addInvoiceFooterD2D(invoice models.DoorToDoorInvoice) core.Row {
 	return row.New().Add(
 		col.New(8).Add(
-			text.New("INFORMASI PEMBAYARAN / PAYMENT DETAILS :"),
+			text.New("INFORMASI PEMBAYARAN / PAYMENT DETAILS :", props.Text{
+				Family: fontfamily.Courier,
+			}),
 			text.New("NAMA BANK / BANK DETAILS : BANK CENTRAL ASIA - CENGKEH", props.Text{
-				Top:   5,
-				Style: fontstyle.Bold,
+				Top:    5,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 			text.New("NAMA AKUN / ACCOUNT NAME : PT RADIX SAGARA JOMANTARA", props.Text{
-				Top:   10,
-				Style: fontstyle.Bold,
+				Top:    10,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 			text.New("1. REKENING RUPIAH / INDONESIAN RUPIAH ACCOUNT", props.Text{
 				Top: 15,
 			}),
 			text.New("NOMOR REKENING / ACCOUNT NUMBER : 240-303-0023", props.Text{
-				Top:   20,
-				Style: fontstyle.Bold,
+				Top:    20,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 			text.New("2. REKENING MATA UANG ASING / FOREIGN CURRENCY ACCOUNT", props.Text{
-				Top: 25,
+				Top:    25,
+				Family: fontfamily.Courier,
 			}),
 			text.New("NOMOR REKENING /ACCOUNT NUMBER : 240-036-3121", props.Text{
-				Top:   30,
-				Style: fontstyle.Bold,
+				Top:    30,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 			text.New("SWIFT CODE : CENAIDJA", props.Text{
-				Top:   35,
-				Style: fontstyle.Bold,
+				Top:    35,
+				Style:  fontstyle.Bold,
+				Family: fontfamily.Courier,
 			}),
 		),
 		col.New(4).Add(
 			text.New("Jakarta, "+invoice.InvoiceDate.Format("02 January 2006"), props.Text{
-				Align: align.Center,
+				Align:  align.Center,
+				Size:   12,
+				Family: fontfamily.Courier,
 			}),
-			signature.New("HARTO JOMAN"),
+			signature.New("HARTO JOMAN", props.Signature{
+				FontSize:   12,
+				FontFamily: fontfamily.Courier,
+			}),
 		),
 	)
 }
