@@ -21,7 +21,7 @@ func RequireAuth(userService userServices.Service) gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, responses.Response{
 				Code:   http.StatusUnauthorized,
 				Status: "Unauthorized",
-				Data:   "Token is Missing",
+				Data:   "Token is missing",
 			})
 			c.Abort()
 			return
@@ -40,7 +40,7 @@ func RequireAuth(userService userServices.Service) gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, responses.Response{
 				Code:   http.StatusUnauthorized,
 				Status: "Unauthorized",
-				Data:   "Token is invalid",
+				Data:   "Token is missing",
 			})
 			c.Abort()
 			return
@@ -77,7 +77,7 @@ func RequireAuth(userService userServices.Service) gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, responses.Response{
 				Code:   http.StatusUnauthorized,
 				Status: "Unauthorized",
-				Data:   "Token is invalid",
+				Data:   "Token error",
 			})
 			c.Abort()
 			return
