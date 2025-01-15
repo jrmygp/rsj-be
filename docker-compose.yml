@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - DB_HOST=host.docker.internal # Use this to connect to localhost from the container
+      - DB_HOST=172.31.18.12 # Use this to connect to localhost from the container
       - DB_USER=root # The MySQL user you set up
       - DB_PASSWORD=password # The MySQL user's password
       - DB_NAME=rsj_be # The database name
