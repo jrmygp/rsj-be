@@ -78,11 +78,11 @@ func NewRouter(userController *controllers.UserController, userService userServi
 
 		quotation.GET("/no-pagination", quotationController.FindAllQuotationsWithoutPagination)
 		quotation.GET("", quotationController.FindAll)
+		quotation.GET("/generate-pdf/:id", quotationController.GeneratePDF)
 		quotation.GET("/:id", quotationController.FindQuotationByID)
 		quotation.POST("", quotationController.CreateQuotation)
 		quotation.PATCH("/:id", quotationController.EditQuotation)
 		quotation.DELETE("/:id", quotationController.DeleteQuotation)
-		quotation.GET("/generate-pdf/:id", quotationController.GeneratePDF)
 	}
 
 	invoice := router.Group("/invoice")
@@ -92,10 +92,10 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		invoice.GET("/no-pagination", invoiceController.FindAllInvoicesWithoutPagination)
 		invoice.POST("/pagination", invoiceController.FindAll)
 		invoice.POST("", invoiceController.CreateInvoice)
+		invoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
 		invoice.GET("/:id", invoiceController.FindInvoiceByID)
 		invoice.PATCH("/:id", invoiceController.EditInvoice)
 		invoice.DELETE("/:id", invoiceController.DeleteInvoice)
-		invoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
 	}
 
 	doorToDoorInvoice := router.Group("/door-to-door")
@@ -104,11 +104,11 @@ func NewRouter(userController *controllers.UserController, userService userServi
 
 		doorToDoorInvoice.GET("/no-pagination", invoiceController.FindAllDoorToDoorWithoutPagination)
 		doorToDoorInvoice.POST("/pagination", invoiceController.FindAllDoorToDoor)
+		doorToDoorInvoice.GET("/generate-pdf/:id", invoiceController.GenerateDoorToDoorPDF)
 		doorToDoorInvoice.GET("/:id", invoiceController.FindDoorToDoorByID)
 		doorToDoorInvoice.POST("", invoiceController.CreateDoorToDoor)
 		doorToDoorInvoice.PATCH("/:id", invoiceController.EditDoorToDoor)
 		doorToDoorInvoice.DELETE("/:id", invoiceController.DeleteDoorToDoor)
-		doorToDoorInvoice.GET("/generate-pdf/:id", invoiceController.GenerateDoorToDoorPDF)
 	}
 
 	return router
