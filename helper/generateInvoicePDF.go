@@ -41,12 +41,12 @@ func GenerateInvoicePDF(invoice models.Invoice) {
 	// Header
 	err := m.RegisterHeader(addInvoiceHeader())
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF Header:", err.Error())
 	}
 
 	// Footer
 	if err = m.RegisterFooter(addInvoiceFooter(invoice)); err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF Footer:", err.Error())
 	}
 
 	// addInvoiceHeader(m)
@@ -61,7 +61,7 @@ func GenerateInvoicePDF(invoice models.Invoice) {
 
 	document, err := m.Generate()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 
 	safeInvoiceNumber := SanitizeFilename(invoice.InvoiceNumber)
@@ -71,7 +71,7 @@ func GenerateInvoicePDF(invoice models.Invoice) {
 
 	err = document.Save(filePath)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 	log.Println("PDF saved successfully")
 }
@@ -362,7 +362,7 @@ func getInvoiceObject(invoice models.Invoice) []InvoiceItem {
 func addInvoiceItemList(m core.Maroto, invoice models.Invoice) {
 	rows, err := list.Build[InvoiceItem](getInvoiceObject(invoice))
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 	m.AddRows(rows...)
 

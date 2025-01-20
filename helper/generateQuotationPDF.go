@@ -26,10 +26,10 @@ import (
 )
 
 func SanitizeFilename(filename string) string {
-	re := regexp.MustCompile(`[\/:*?"<>|]`)
+	// Remove all special characters except alphanumeric, underscore, and hyphen
+	re := regexp.MustCompile(`[^a-zA-Z0-9_-]`)
 	return re.ReplaceAllString(filename, "_")
 }
-
 func GenerateQuotationPDF(quotation models.Quotation) {
 	cfg := config.NewBuilder().
 		WithOrientation(orientation.Vertical).
@@ -44,12 +44,12 @@ func GenerateQuotationPDF(quotation models.Quotation) {
 	// Header
 	err := m.RegisterHeader(addHeader())
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 
 	// Footer
 	if err = m.RegisterFooter(addFooter()); err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 
 	// Invoice Number
@@ -63,7 +63,7 @@ func GenerateQuotationPDF(quotation models.Quotation) {
 
 	document, err := m.Generate()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 
 	safeQuotationNumber := SanitizeFilename(quotation.QuotationNumber)
@@ -73,7 +73,7 @@ func GenerateQuotationPDF(quotation models.Quotation) {
 
 	err = document.Save(filePath)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 	log.Println("PDF saved successfully")
 }
@@ -254,7 +254,7 @@ func getObject(quotation models.Quotation) []QuotationItem {
 func addQuotationItemList(m core.Maroto, quotation models.Quotation) {
 	rows, err := list.Build[QuotationItem](getObject(quotation))
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 	m.AddRows(rows...)
 

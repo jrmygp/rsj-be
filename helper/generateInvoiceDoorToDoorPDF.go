@@ -39,12 +39,12 @@ func GenerateInvoiceD2DPDF(invoice models.DoorToDoorInvoice) {
 	// Header
 	err := m.RegisterHeader(addInvoiceD2DHeader())
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 
 	// Footer
 	if err = m.RegisterFooter(addInvoiceFooterD2D(invoice)); err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 
 	addInvoiceNumberD2D(m, invoice)
@@ -55,7 +55,7 @@ func GenerateInvoiceD2DPDF(invoice models.DoorToDoorInvoice) {
 
 	document, err := m.Generate()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 
 	safeInvoiceNumber := SanitizeFilename(invoice.InvoiceNumber)
@@ -65,7 +65,7 @@ func GenerateInvoiceD2DPDF(invoice models.DoorToDoorInvoice) {
 
 	err = document.Save(filePath)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 	log.Println("PDF saved successfully")
 }
@@ -308,7 +308,7 @@ func getInvoiceObjectD2D(invoice models.DoorToDoorInvoice) []InvoiceItem {
 func addInvoiceItemListD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 	rows, err := list.Build[InvoiceItem](getInvoiceObjectD2D(invoice))
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Error generating PDF:", err.Error())
 	}
 	m.AddRows(rows...)
 
