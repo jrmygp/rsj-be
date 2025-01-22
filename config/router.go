@@ -85,17 +85,30 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		quotation.DELETE("/:id", quotationController.DeleteQuotation)
 	}
 
-	invoice := router.Group("/invoice")
+	invoiceExport := router.Group("/invoice-export")
 	{
-		invoice.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+		invoiceExport.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
 
-		invoice.GET("/no-pagination", invoiceController.FindAllInvoicesWithoutPagination)
-		invoice.POST("/pagination", invoiceController.FindAll)
-		invoice.POST("", invoiceController.CreateInvoice)
-		invoice.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
-		invoice.GET("/:id", invoiceController.FindInvoiceByID)
-		invoice.PATCH("/:id", invoiceController.EditInvoice)
-		invoice.DELETE("/:id", invoiceController.DeleteInvoice)
+		invoiceExport.GET("/no-pagination", invoiceController.FindAllInvoiceExportWithoutPagination)
+		invoiceExport.POST("/pagination", invoiceController.FindAllExport)
+		invoiceExport.POST("", invoiceController.CreateInvoiceExport)
+		invoiceExport.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
+		invoiceExport.GET("/:id", invoiceController.FindInvoiceExportByID)
+		invoiceExport.PATCH("/:id", invoiceController.EditInvoiceExport)
+		invoiceExport.DELETE("/:id", invoiceController.DeleteInvoiceExport)
+	}
+
+	invoiceImport := router.Group("/invoice-import")
+	{
+		invoiceImport.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+
+		invoiceImport.GET("/no-pagination", invoiceController.FindAllInvoiceImportWithoutPagination)
+		invoiceImport.POST("/pagination", invoiceController.FindAllImport)
+		invoiceImport.POST("", invoiceController.CreateInvoiceImport)
+		invoiceImport.GET("/generate-pdf/:id", invoiceController.GeneratePDF)
+		invoiceImport.GET("/:id", invoiceController.FindInvoiceImportByID)
+		invoiceImport.PATCH("/:id", invoiceController.EditInvoiceImport)
+		invoiceImport.DELETE("/:id", invoiceController.DeleteInvoiceImport)
 	}
 
 	doorToDoorInvoice := router.Group("/door-to-door")

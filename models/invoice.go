@@ -54,10 +54,9 @@ func (jc *JSONInvoiceD2DItems) Scan(value interface{}) error {
 }
 
 // Export and Import invoice
-type Invoice struct {
+type InvoiceExport struct {
 	gorm.Model
 	ID                int
-	Category          string
 	InvoiceNumber     string
 	Type              string
 	CustomerID        int `gorm:"foreignKey:CustomerID"`
@@ -66,6 +65,30 @@ type Invoice struct {
 	Consignee         Shipper
 	ShipperID         int `gorm:"foreignKey:ShipperID"`
 	Shipper           Customer
+	Service           string
+	BLAWB             string
+	AJU               string
+	PortOfLoadingID   int `gorm:"foreignKey:PortOfLoadingID"`
+	PortOfLoading     Port
+	PortOfDischargeID int `gorm:"foreignKey:PortOfDischargeID"`
+	PortOfDischarge   Port
+	ShippingMarks     string
+	InvoiceDate       time.Time
+	Status            string
+	InvoiceItems      JSONInvoiceItems `gorm:"type:json"`
+}
+
+type InvoiceImport struct {
+	gorm.Model
+	ID                int
+	InvoiceNumber     string
+	Type              string
+	CustomerID        int `gorm:"foreignKey:CustomerID"`
+	Customer          Customer
+	ConsigneeID       int `gorm:"foreignKey:ConsigneeID"`
+	Consignee         Customer
+	ShipperID         int `gorm:"foreignKey:ShipperID"`
+	Shipper           Shipper
 	Service           string
 	BLAWB             string
 	AJU               string

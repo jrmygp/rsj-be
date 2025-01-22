@@ -27,7 +27,7 @@ import (
 	ntw "moul.io/number-to-words"
 )
 
-func GenerateInvoicePDF(invoice models.Invoice) {
+func GenerateInvoicePDF(invoice models.InvoiceExport) {
 	cfg := config.NewBuilder().
 		WithOrientation(orientation.Vertical).
 		WithPageSize(pagesize.A4).
@@ -86,7 +86,7 @@ func addInvoiceHeader() core.Row {
 	)
 }
 
-func addInvoiceNumber(m core.Maroto, invoice models.Invoice) {
+func addInvoiceNumber(m core.Maroto, invoice models.InvoiceExport) {
 	m.AddRow(5)
 
 	m.AddRow(20,
@@ -150,7 +150,7 @@ func addInvoiceNumber(m core.Maroto, invoice models.Invoice) {
 	m.AddRow(5, line.NewCol(12, props.Line{SizePercent: 100}))
 }
 
-func customerSection(m core.Maroto, invoice models.Invoice) {
+func customerSection(m core.Maroto, invoice models.InvoiceExport) {
 	m.AddRow(15,
 		col.New(8).Add(
 			text.New("Sudah diterima dari :", props.Text{
@@ -209,7 +209,7 @@ func CalculateTotalAndSpell(invoiceItems []models.InvoiceItem) string {
 	return strings.ToUpper(spelledTotal)
 }
 
-func priceSpellingSection(m core.Maroto, invoice models.Invoice) {
+func priceSpellingSection(m core.Maroto, invoice models.InvoiceExport) {
 	m.AddRow(15,
 		col.New(12).Add(
 			text.New("Uang sejumlah :", props.Text{
@@ -234,7 +234,7 @@ func priceSpellingSection(m core.Maroto, invoice models.Invoice) {
 
 }
 
-func addInvoiceDetail(m core.Maroto, invoice models.Invoice) {
+func addInvoiceDetail(m core.Maroto, invoice models.InvoiceExport) {
 	m.AddRow(40,
 		col.New(3).Add(
 			text.New("Untuk pembayaran :", props.Text{
@@ -331,7 +331,7 @@ func (o InvoiceItem) GetContent(i int) core.Row {
 	return r
 }
 
-func getInvoiceObject(invoice models.Invoice) []InvoiceItem {
+func getInvoiceObject(invoice models.InvoiceExport) []InvoiceItem {
 	var items []InvoiceItem
 
 	for _, item := range invoice.InvoiceItems {
@@ -359,7 +359,7 @@ func getInvoiceObject(invoice models.Invoice) []InvoiceItem {
 	return items
 }
 
-func addInvoiceItemList(m core.Maroto, invoice models.Invoice) {
+func addInvoiceItemList(m core.Maroto, invoice models.InvoiceExport) {
 	rows, err := list.Build[InvoiceItem](getInvoiceObject(invoice))
 	if err != nil {
 		log.Println("Error generating PDF:", err.Error())
@@ -430,7 +430,7 @@ func addInvoiceItemList(m core.Maroto, invoice models.Invoice) {
 
 }
 
-func addInvoiceFooter(invoice models.Invoice) core.Row {
+func addInvoiceFooter(invoice models.InvoiceExport) core.Row {
 	return row.New().Add(
 		col.New(8).Add(
 			text.New("INFORMASI PEMBAYARAN / PAYMENT DETAILS :", props.Text{

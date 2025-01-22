@@ -23,12 +23,13 @@ func NewService(repository repositories.Repository, customerRepository customerR
 	return &service{repository, customerRepository, shipperRepository, portRepository}
 }
 
-func (s *service) FindAllNoPagination() ([]models.Invoice, error) {
-	invoices, err := s.repository.FindAllNoPagination()
+// Export implementations
+func (s *service) FindAllExportNoPagination() ([]models.InvoiceExport, error) {
+	invoices, err := s.repository.FindAllExportNoPagination()
 	return invoices, err
 }
 
-func (s *service) Create(invoiceRequest requests.CreateInvoiceRequest) (models.Invoice, error) {
+func (s *service) CreateExport(invoiceRequest requests.CreateInvoiceRequest) (models.InvoiceExport, error) {
 
 	invoiceItems := make([]models.InvoiceItem, len(invoiceRequest.InvoiceItems))
 	for i, item := range invoiceRequest.InvoiceItems {
@@ -42,8 +43,7 @@ func (s *service) Create(invoiceRequest requests.CreateInvoiceRequest) (models.I
 		}
 	}
 
-	invoice := models.Invoice{
-		Category:          invoiceRequest.Category,
+	invoice := models.InvoiceExport{
 		InvoiceNumber:     invoiceRequest.InvoiceNumber,
 		Type:              invoiceRequest.Type,
 		CustomerID:        invoiceRequest.CustomerID,
@@ -60,27 +60,24 @@ func (s *service) Create(invoiceRequest requests.CreateInvoiceRequest) (models.I
 		InvoiceItems:      invoiceItems,
 	}
 
-	newInvoice, err := s.repository.Create(invoice)
+	newInvoice, err := s.repository.CreateExport(invoice)
 	return newInvoice, err
 }
 
-func (s *service) FindByID(ID int) (models.Invoice, error) {
-	invoice, err := s.repository.FindByID(ID)
+func (s *service) FindExportByID(ID int) (models.InvoiceExport, error) {
+	invoice, err := s.repository.FindExportByID(ID)
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return models.Invoice{}, nil
+		return models.InvoiceExport{}, nil
 	}
 
 	return invoice, err
 }
 
-func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userRoleID int) (models.Invoice, error) {
-	invoice, err := s.repository.FindByID(ID)
+func (s *service) EditExport(ID int, invoiceRequest requests.EditInvoiceRequest, userRoleID int) (models.InvoiceExport, error) {
+	invoice, err := s.repository.FindExportByID(ID)
 	if err != nil {
-		return models.Invoice{}, err // Handle not found case
-	}
-	if invoiceRequest.Category != "" {
-		invoice.Category = invoiceRequest.Category
+		return models.InvoiceExport{}, err // Handle not found case
 	}
 	if invoiceRequest.InvoiceNumber != "" {
 		invoice.InvoiceNumber = invoiceRequest.InvoiceNumber
@@ -102,7 +99,7 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 	}
 	if invoiceRequest.Status != "" && invoiceRequest.Status != invoice.Status {
 		if userRoleID != 1 {
-			return models.Invoice{}, errors.New("you have no access to change status")
+			return models.InvoiceExport{}, errors.New("you have no access to change status")
 		}
 		invoice.Status = invoiceRequest.Status
 	}
@@ -114,9 +111,9 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 		customer, err := s.customerRepository.FindByID(invoiceRequest.CustomerID)
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return models.Invoice{}, errors.New("customer not found")
+				return models.InvoiceExport{}, errors.New("customer not found")
 			}
-			return models.Invoice{}, err
+			return models.InvoiceExport{}, err
 		}
 		invoice.Customer = customer
 		invoice.CustomerID = invoiceRequest.CustomerID
@@ -125,9 +122,9 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 		consignee, err := s.shipperRepository.FindByID(invoiceRequest.ConsigneeID)
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return models.Invoice{}, errors.New("consignee not found")
+				return models.InvoiceExport{}, errors.New("consignee not found")
 			}
-			return models.Invoice{}, err
+			return models.InvoiceExport{}, err
 		}
 		invoice.Consignee = consignee
 		invoice.ConsigneeID = invoiceRequest.ConsigneeID
@@ -136,9 +133,9 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 		shipper, err := s.customerRepository.FindByID(invoiceRequest.ShipperID)
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return models.Invoice{}, errors.New("shipper not found")
+				return models.InvoiceExport{}, errors.New("shipper not found")
 			}
-			return models.Invoice{}, err
+			return models.InvoiceExport{}, err
 		}
 		invoice.Shipper = shipper
 		invoice.ShipperID = invoiceRequest.ShipperID
@@ -147,9 +144,9 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 		port, err := s.portRepository.FindByID(invoiceRequest.PortOfLoadingID)
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return models.Invoice{}, errors.New("port not found")
+				return models.InvoiceExport{}, errors.New("port not found")
 			}
-			return models.Invoice{}, err
+			return models.InvoiceExport{}, err
 		}
 		invoice.PortOfLoading = port
 		invoice.PortOfLoadingID = invoiceRequest.PortOfLoadingID
@@ -158,9 +155,9 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 		port, err := s.portRepository.FindByID(invoiceRequest.PortOfDischargeID)
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return models.Invoice{}, errors.New("port not found")
+				return models.InvoiceExport{}, errors.New("port not found")
 			}
-			return models.Invoice{}, err
+			return models.InvoiceExport{}, err
 		}
 		invoice.PortOfDischarge = port
 		invoice.PortOfDischargeID = invoiceRequest.PortOfDischargeID
@@ -182,29 +179,220 @@ func (s *service) Edit(ID int, invoiceRequest requests.EditInvoiceRequest, userR
 		invoice.InvoiceItems = jsonItems
 	}
 
-	updatedInvoice, err := s.repository.Edit(invoice)
+	updatedInvoice, err := s.repository.EditExport(invoice)
 	return updatedInvoice, err
 }
 
-func (s *service) Delete(ID int) (models.Invoice, error) {
-	invoice, err := s.repository.Delete(ID)
+func (s *service) DeleteExport(ID int) (models.InvoiceExport, error) {
+	invoice, err := s.repository.DeleteExport(ID)
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return models.Invoice{}, nil
+		return models.InvoiceExport{}, nil
 	}
 
 	return invoice, err
 }
 
-func (s *service) FindAll(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.Invoice, int64, int, int, int) {
+func (s *service) FindAllExport(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.InvoiceExport, int64, int, int, int) {
 	if page < 1 {
-		return []models.Invoice{}, 0, 0, 0, 0 // Handle invalid page
+		return []models.InvoiceExport{}, 0, 0, 0, 0 // Handle invalid page
 	}
 
 	pageSize := 10
 	offset := (page - 1) * pageSize
 
-	invoice, totalCount := s.repository.FindAll(searchQuery, offset, pageSize, filter.CustomerID, filter.Category)
+	invoice, totalCount := s.repository.FindAllExport(searchQuery, offset, pageSize, filter.CustomerID)
+
+	firstRow := offset + 1
+	lastRow := offset + len(invoice)
+	if len(invoice) == 0 {
+		firstRow = 0
+		lastRow = 0
+	}
+	totalPages := (int(totalCount) + pageSize - 1) / pageSize
+
+	return invoice, totalCount, firstRow, lastRow, totalPages
+}
+
+// Import implementations
+func (s *service) FindAllImportNoPagination() ([]models.InvoiceImport, error) {
+	invoices, err := s.repository.FindAllImportNoPagination()
+	return invoices, err
+}
+
+func (s *service) CreateImport(invoiceRequest requests.CreateInvoiceRequest) (models.InvoiceImport, error) {
+
+	invoiceItems := make([]models.InvoiceItem, len(invoiceRequest.InvoiceItems))
+	for i, item := range invoiceRequest.InvoiceItems {
+		invoiceItems[i] = models.InvoiceItem{
+			ItemName: item.ItemName,
+			Currency: item.Currency,
+			Price:    item.Price,
+			Kurs:     item.Kurs,
+			Quantity: item.Quantity,
+			Unit:     item.Unit,
+		}
+	}
+
+	invoice := models.InvoiceImport{
+		InvoiceNumber:     invoiceRequest.InvoiceNumber,
+		Type:              invoiceRequest.Type,
+		CustomerID:        invoiceRequest.CustomerID,
+		ConsigneeID:       invoiceRequest.ConsigneeID,
+		ShipperID:         invoiceRequest.ShipperID,
+		Service:           invoiceRequest.Service,
+		BLAWB:             invoiceRequest.BLAWB,
+		AJU:               invoiceRequest.AJU,
+		PortOfLoadingID:   invoiceRequest.PortOfLoadingID,
+		PortOfDischargeID: invoiceRequest.PortOfDischargeID,
+		ShippingMarks:     invoiceRequest.ShippingMarks,
+		InvoiceDate:       invoiceRequest.InvoiceDate.Time,
+		Status:            invoiceRequest.Status,
+		InvoiceItems:      invoiceItems,
+	}
+
+	newInvoice, err := s.repository.CreateImport(invoice)
+	return newInvoice, err
+}
+
+func (s *service) FindImportByID(ID int) (models.InvoiceImport, error) {
+	invoice, err := s.repository.FindImportByID(ID)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.InvoiceImport{}, nil
+	}
+
+	return invoice, err
+}
+
+func (s *service) EditImport(ID int, invoiceRequest requests.EditInvoiceRequest, userRoleID int) (models.InvoiceImport, error) {
+	invoice, err := s.repository.FindImportByID(ID)
+	if err != nil {
+		return models.InvoiceImport{}, err // Handle not found case
+	}
+	if invoiceRequest.InvoiceNumber != "" {
+		invoice.InvoiceNumber = invoiceRequest.InvoiceNumber
+	}
+	if invoiceRequest.Type != "" {
+		invoice.Type = invoiceRequest.Type
+	}
+	if invoiceRequest.Service != "" {
+		invoice.Service = invoiceRequest.Service
+	}
+	if invoiceRequest.BLAWB != "" {
+		invoice.BLAWB = invoiceRequest.BLAWB
+	}
+	if invoiceRequest.AJU != "" {
+		invoice.AJU = invoiceRequest.AJU
+	}
+	if invoiceRequest.ShippingMarks != "" {
+		invoice.ShippingMarks = invoiceRequest.ShippingMarks
+	}
+	if invoiceRequest.Status != "" && invoiceRequest.Status != invoice.Status {
+		if userRoleID != 1 {
+			return models.InvoiceImport{}, errors.New("you have no access to change status")
+		}
+		invoice.Status = invoiceRequest.Status
+	}
+	// Check if InvoiceDate is not zero (not the zero value for time.Time)
+	if !invoiceRequest.InvoiceDate.IsZero() {
+		invoice.InvoiceDate = invoiceRequest.InvoiceDate.Time
+	}
+	if invoiceRequest.CustomerID != 0 {
+		customer, err := s.customerRepository.FindByID(invoiceRequest.CustomerID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.InvoiceImport{}, errors.New("customer not found")
+			}
+			return models.InvoiceImport{}, err
+		}
+		invoice.Customer = customer
+		invoice.CustomerID = invoiceRequest.CustomerID
+	}
+	if invoiceRequest.ConsigneeID != 0 {
+		consignee, err := s.customerRepository.FindByID(invoiceRequest.ConsigneeID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.InvoiceImport{}, errors.New("consignee not found")
+			}
+			return models.InvoiceImport{}, err
+		}
+		invoice.Consignee = consignee
+		invoice.ConsigneeID = invoiceRequest.ConsigneeID
+	}
+	if invoiceRequest.ShipperID != 0 {
+		shipper, err := s.shipperRepository.FindByID(invoiceRequest.ShipperID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.InvoiceImport{}, errors.New("shipper not found")
+			}
+			return models.InvoiceImport{}, err
+		}
+		invoice.Shipper = shipper
+		invoice.ShipperID = invoiceRequest.ShipperID
+	}
+	if invoiceRequest.PortOfLoadingID != 0 {
+		port, err := s.portRepository.FindByID(invoiceRequest.PortOfLoadingID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.InvoiceImport{}, errors.New("port not found")
+			}
+			return models.InvoiceImport{}, err
+		}
+		invoice.PortOfLoading = port
+		invoice.PortOfLoadingID = invoiceRequest.PortOfLoadingID
+	}
+	if invoiceRequest.PortOfDischargeID != 0 {
+		port, err := s.portRepository.FindByID(invoiceRequest.PortOfDischargeID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return models.InvoiceImport{}, errors.New("port not found")
+			}
+			return models.InvoiceImport{}, err
+		}
+		invoice.PortOfDischarge = port
+		invoice.PortOfDischargeID = invoiceRequest.PortOfDischargeID
+	}
+
+	if len(invoiceRequest.InvoiceItems) > 0 {
+		var jsonItems models.JSONInvoiceItems //
+		for _, item := range invoiceRequest.InvoiceItems {
+			item := models.InvoiceItem{
+				ItemName: item.ItemName,
+				Currency: item.Currency,
+				Price:    item.Price,
+				Kurs:     item.Kurs,
+				Quantity: item.Quantity,
+				Unit:     item.Unit,
+			}
+			jsonItems = append(jsonItems, item)
+		}
+		invoice.InvoiceItems = jsonItems
+	}
+
+	updatedInvoice, err := s.repository.EditImport(invoice)
+	return updatedInvoice, err
+}
+
+func (s *service) DeleteImport(ID int) (models.InvoiceImport, error) {
+	invoice, err := s.repository.DeleteImport(ID)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.InvoiceImport{}, nil
+	}
+
+	return invoice, err
+}
+
+func (s *service) FindAllImport(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.InvoiceImport, int64, int, int, int) {
+	if page < 1 {
+		return []models.InvoiceImport{}, 0, 0, 0, 0 // Handle invalid page
+	}
+
+	pageSize := 10
+	offset := (page - 1) * pageSize
+
+	invoice, totalCount := s.repository.FindAllImport(searchQuery, offset, pageSize, filter.CustomerID)
 
 	firstRow := offset + 1
 	lastRow := offset + len(invoice)
@@ -218,7 +406,6 @@ func (s *service) FindAll(searchQuery string, page int, filter requests.InvoiceF
 }
 
 // Door to Door implementations
-
 func (s *service) FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, error) {
 	invoices, err := s.repository.FindAllDoorToDoorNoPagination()
 	return invoices, err

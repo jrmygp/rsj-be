@@ -6,12 +6,19 @@ import (
 )
 
 type Service interface {
-	FindAllNoPagination() ([]models.Invoice, error)
-	Create(invoice requests.CreateInvoiceRequest) (models.Invoice, error)
-	FindByID(ID int) (models.Invoice, error)
-	Edit(ID int, invoice requests.EditInvoiceRequest, userRoleID int) (models.Invoice, error)
-	Delete(ID int) (models.Invoice, error)
-	FindAll(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.Invoice, int64, int, int, int)
+	FindAllExportNoPagination() ([]models.InvoiceExport, error)
+	CreateExport(invoice requests.CreateInvoiceRequest) (models.InvoiceExport, error)
+	FindExportByID(ID int) (models.InvoiceExport, error)
+	EditExport(ID int, invoice requests.EditInvoiceRequest, userRoleID int) (models.InvoiceExport, error)
+	DeleteExport(ID int) (models.InvoiceExport, error)
+	FindAllExport(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.InvoiceExport, int64, int, int, int)
+
+	FindAllImportNoPagination() ([]models.InvoiceImport, error)
+	CreateImport(invoice requests.CreateInvoiceRequest) (models.InvoiceImport, error)
+	FindImportByID(ID int) (models.InvoiceImport, error)
+	EditImport(ID int, invoice requests.EditInvoiceRequest, userRoleID int) (models.InvoiceImport, error)
+	DeleteImport(ID int) (models.InvoiceImport, error)
+	FindAllImport(searchQuery string, page int, filter requests.InvoiceFilterRequest) ([]models.InvoiceImport, int64, int, int, int)
 
 	FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, error)
 	CreateDoorToDoor(invoice requests.CreateDoorToDoorRequest) (models.DoorToDoorInvoice, error)

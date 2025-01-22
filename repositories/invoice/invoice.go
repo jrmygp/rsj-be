@@ -3,12 +3,19 @@ package repositories
 import "server/models"
 
 type Repository interface {
-	FindAllNoPagination() ([]models.Invoice, error)
-	Create(invoice models.Invoice) (models.Invoice, error)
-	FindByID(ID int) (models.Invoice, error)
-	Edit(invoice models.Invoice) (models.Invoice, error)
-	Delete(ID int) (models.Invoice, error)
-	FindAll(searchQuery string, offset int, pageSize int, customerID int, category string) (invoice []models.Invoice, totalCount int64)
+	FindAllExportNoPagination() ([]models.InvoiceExport, error)
+	CreateExport(invoice models.InvoiceExport) (models.InvoiceExport, error)
+	FindExportByID(ID int) (models.InvoiceExport, error)
+	EditExport(invoice models.InvoiceExport) (models.InvoiceExport, error)
+	DeleteExport(ID int) (models.InvoiceExport, error)
+	FindAllExport(searchQuery string, offset int, pageSize int, customerID int) (invoice []models.InvoiceExport, totalCount int64)
+
+	FindAllImportNoPagination() ([]models.InvoiceImport, error)
+	CreateImport(invoice models.InvoiceImport) (models.InvoiceImport, error)
+	FindImportByID(ID int) (models.InvoiceImport, error)
+	EditImport(invoice models.InvoiceImport) (models.InvoiceImport, error)
+	DeleteImport(ID int) (models.InvoiceImport, error)
+	FindAllImport(searchQuery string, offset int, pageSize int, customerID int) (invoice []models.InvoiceImport, totalCount int64)
 
 	FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, error)
 	CreateDoorToDoor(invoice models.DoorToDoorInvoice) (models.DoorToDoorInvoice, error)

@@ -21,7 +21,57 @@ func NewInvoiceController(service services.Service) *InvoiceController {
 	return &InvoiceController{service}
 }
 
-func convertInvoiceResponse(o models.Invoice) responses.InvoiceResponse {
+func convertInvoiceExportResponse(o models.InvoiceExport) responses.InvoiceResponse {
+	var invoiceItemsResponse []responses.InvoiceItemResponse
+	var nominal float64
+
+	for _, item := range o.InvoiceItems {
+		// Convert Quantity to float64 for the calculation
+		quantity := float64(item.Quantity)
+
+		// Calculate the subtotal for the current item
+		subTotal := item.Price * quantity
+		if item.Kurs != nil {
+			subTotal *= *item.Kurs // Multiply by Kurs if it's not nil
+		}
+		nominal += subTotal // Add to the total nominal value
+
+		itemResponse := responses.InvoiceItemResponse{
+			ItemName: item.ItemName,
+			Currency: item.Currency,
+			Price:    item.Price,
+			Kurs:     item.Kurs,
+			Quantity: item.Quantity,
+		}
+		invoiceItemsResponse = append(invoiceItemsResponse, itemResponse)
+	}
+
+	return responses.InvoiceResponse{
+		ID:                  o.ID,
+		InvoiceNumber:       o.InvoiceNumber,
+		Type:                o.Type,
+		CustomerID:          o.CustomerID,
+		CustomerName:        o.Customer.Name,
+		ConsigneeID:         o.ConsigneeID,
+		CosgineeName:        o.Consignee.Name,
+		ShipperID:           o.ShipperID,
+		ShipperName:         o.Shipper.Name,
+		Service:             o.Service,
+		BLAWB:               o.BLAWB,
+		AJU:                 o.AJU,
+		PortOfLoadingID:     o.PortOfLoadingID,
+		PortOfLoadingName:   o.PortOfLoading.PortName,
+		PortOfDischargeID:   o.PortOfDischargeID,
+		PortOfDischargeName: o.PortOfDischarge.PortName,
+		ShippingMarks:       o.ShippingMarks,
+		InvoiceDate:         o.InvoiceDate.Format("2006-01-02"),
+		Status:              o.Status,
+		InvoiceItems:        invoiceItemsResponse,
+		Nominal:             nominal,
+	}
+}
+
+func convertInvoiceImportResponse(o models.InvoiceImport) responses.InvoiceResponse {
 	var invoiceItemsResponse []responses.InvoiceItemResponse
 	var nominal float64
 
@@ -120,8 +170,8 @@ func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorR
 	}
 }
 
-func (h *InvoiceController) FindAllInvoicesWithoutPagination(c *gin.Context) {
-	invoices, err := h.service.FindAllNoPagination()
+func (h *InvoiceController) FindAllInvoiceExportWithoutPagination(c *gin.Context) {
+	invoices, err := h.service.FindAllExportNoPagination()
 	if err != nil {
 		webResponse := responses.Response{
 			Code:   http.StatusBadRequest,
@@ -145,7 +195,7 @@ func (h *InvoiceController) FindAllInvoicesWithoutPagination(c *gin.Context) {
 	}
 
 	for _, invoice := range invoices {
-		response := convertInvoiceResponse(invoice)
+		response := convertInvoiceExportResponse(invoice)
 
 		invoiceResponses = append(invoiceResponses, response)
 	}
@@ -159,7 +209,7 @@ func (h *InvoiceController) FindAllInvoicesWithoutPagination(c *gin.Context) {
 	c.JSON(http.StatusOK, webResponse)
 }
 
-func (h *InvoiceController) CreateInvoice(c *gin.Context) {
+func (h *InvoiceController) CreateInvoiceExport(c *gin.Context) {
 	var invoiceForm requests.CreateInvoiceRequest
 
 	err := c.ShouldBindJSON(&invoiceForm)
@@ -170,7 +220,7 @@ func (h *InvoiceController) CreateInvoice(c *gin.Context) {
 		return
 	}
 
-	invoice, err := h.service.Create(invoiceForm)
+	invoice, err := h.service.CreateExport(invoiceForm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -181,13 +231,13 @@ func (h *InvoiceController) CreateInvoice(c *gin.Context) {
 	webResponse := responses.Response{
 		Code:   http.StatusOK,
 		Status: "OK",
-		Data:   convertInvoiceResponse(invoice),
+		Data:   convertInvoiceExportResponse(invoice),
 	}
 
 	c.JSON(http.StatusOK, webResponse)
 }
 
-func (h *InvoiceController) FindInvoiceByID(c *gin.Context) {
+func (h *InvoiceController) FindInvoiceExportByID(c *gin.Context) {
 	idParam := c.Param("id")
 	ID, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -197,7 +247,7 @@ func (h *InvoiceController) FindInvoiceByID(c *gin.Context) {
 		return
 	}
 
-	invoice, err := h.service.FindByID(ID)
+	invoice, err := h.service.FindExportByID(ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -218,14 +268,14 @@ func (h *InvoiceController) FindInvoiceByID(c *gin.Context) {
 	webResponse := responses.Response{
 		Code:   http.StatusOK,
 		Status: "OK",
-		Data:   convertInvoiceResponse(invoice),
+		Data:   convertInvoiceExportResponse(invoice),
 	}
 
 	c.JSON(http.StatusOK, webResponse)
 
 }
 
-func (h *InvoiceController) EditInvoice(c *gin.Context) {
+func (h *InvoiceController) EditInvoiceExport(c *gin.Context) {
 	var invoiceForm requests.EditInvoiceRequest
 
 	err := c.ShouldBindJSON(&invoiceForm)
@@ -251,7 +301,7 @@ func (h *InvoiceController) EditInvoice(c *gin.Context) {
 	}
 	userRoleID := int(user.(models.User).UserRoleID)
 
-	invoice, err := h.service.Edit(id, invoiceForm, userRoleID)
+	invoice, err := h.service.EditExport(id, invoiceForm, userRoleID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -262,13 +312,13 @@ func (h *InvoiceController) EditInvoice(c *gin.Context) {
 	webResponse := responses.Response{
 		Code:   http.StatusOK,
 		Status: "OK",
-		Data:   convertInvoiceResponse(invoice),
+		Data:   convertInvoiceExportResponse(invoice),
 	}
 
 	c.JSON(http.StatusOK, webResponse)
 }
 
-func (h *InvoiceController) DeleteInvoice(c *gin.Context) {
+func (h *InvoiceController) DeleteInvoiceExport(c *gin.Context) {
 	idParam := c.Param("id")
 	ID, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -277,7 +327,7 @@ func (h *InvoiceController) DeleteInvoice(c *gin.Context) {
 		})
 		return
 	}
-	invoice, err := h.service.Delete(ID)
+	invoice, err := h.service.DeleteExport(ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -288,13 +338,13 @@ func (h *InvoiceController) DeleteInvoice(c *gin.Context) {
 	webResponse := responses.Response{
 		Code:   http.StatusOK,
 		Status: "OK",
-		Data:   convertInvoiceResponse(invoice),
+		Data:   convertInvoiceExportResponse(invoice),
 	}
 
 	c.JSON(http.StatusOK, webResponse)
 }
 
-func (h *InvoiceController) FindAll(c *gin.Context) {
+func (h *InvoiceController) FindAllExport(c *gin.Context) {
 	var filterForm requests.InvoiceFilterRequest
 
 	err := c.ShouldBindJSON(&filterForm)
@@ -318,11 +368,11 @@ func (h *InvoiceController) FindAll(c *gin.Context) {
 
 	}
 
-	invoice, totalCount, firstRow, lastRow, totalPages := h.service.FindAll(searchQuery, page, filterForm)
+	invoice, totalCount, firstRow, lastRow, totalPages := h.service.FindAllExport(searchQuery, page, filterForm)
 
 	var invoiceResponses []responses.InvoiceResponse
 	for _, invoice := range invoice {
-		invoiceResponses = append(invoiceResponses, convertInvoiceResponse(invoice))
+		invoiceResponses = append(invoiceResponses, convertInvoiceExportResponse(invoice))
 	}
 
 	webPaginationResponse := responses.PaginationResponse{
@@ -348,7 +398,7 @@ func (h *InvoiceController) GeneratePDF(c *gin.Context) {
 		return
 	}
 
-	invoice, err := h.service.FindByID(ID)
+	invoice, err := h.service.FindExportByID(ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -366,6 +416,224 @@ func (h *InvoiceController) GeneratePDF(c *gin.Context) {
 	helper.GenerateInvoicePDF(invoice)
 
 	c.File(filePath)
+}
+
+func (h *InvoiceController) FindAllInvoiceImportWithoutPagination(c *gin.Context) {
+	invoices, err := h.service.FindAllImportNoPagination()
+	if err != nil {
+		webResponse := responses.Response{
+			Code:   http.StatusBadRequest,
+			Status: "ERROR",
+			Data:   err,
+		}
+		c.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	var invoiceResponses []responses.InvoiceResponse
+
+	if len(invoices) == 0 {
+		webResponse := responses.Response{
+			Code:   http.StatusOK,
+			Status: "OK",
+			Data:   []responses.InvoiceResponse{},
+		}
+		c.JSON(http.StatusOK, webResponse)
+		return
+	}
+
+	for _, invoice := range invoices {
+		response := convertInvoiceImportResponse(invoice)
+
+		invoiceResponses = append(invoiceResponses, response)
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "Success",
+		Data:   invoiceResponses,
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *InvoiceController) CreateInvoiceImport(c *gin.Context) {
+	var invoiceForm requests.CreateInvoiceRequest
+
+	err := c.ShouldBindJSON(&invoiceForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	invoice, err := h.service.CreateImport(invoiceForm)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertInvoiceImportResponse(invoice),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *InvoiceController) FindInvoiceImportByID(c *gin.Context) {
+	idParam := c.Param("id")
+	ID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid ID format",
+		})
+		return
+	}
+
+	invoice, err := h.service.FindImportByID(ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if invoice.ID == 0 {
+		webResponse := responses.Response{
+			Code:   http.StatusOK,
+			Status: "OK",
+			Data:   nil,
+		}
+		c.JSON(http.StatusOK, webResponse)
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertInvoiceImportResponse(invoice),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+
+}
+
+func (h *InvoiceController) EditInvoiceImport(c *gin.Context) {
+	var invoiceForm requests.EditInvoiceRequest
+
+	err := c.ShouldBindJSON(&invoiceForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	// Get user role from context
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, responses.Response{
+			Code:   http.StatusUnauthorized,
+			Status: "Unauthorized",
+			Data:   "User information missing",
+		})
+		return
+	}
+	userRoleID := int(user.(models.User).UserRoleID)
+
+	invoice, err := h.service.EditImport(id, invoiceForm, userRoleID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertInvoiceImportResponse(invoice),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *InvoiceController) DeleteInvoiceImport(c *gin.Context) {
+	idParam := c.Param("id")
+	ID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid ID format",
+		})
+		return
+	}
+	invoice, err := h.service.DeleteImport(ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	webResponse := responses.Response{
+		Code:   http.StatusOK,
+		Status: "OK",
+		Data:   convertInvoiceImportResponse(invoice),
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
+func (h *InvoiceController) FindAllImport(c *gin.Context) {
+	var filterForm requests.InvoiceFilterRequest
+
+	err := c.ShouldBindJSON(&filterForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// Search
+	searchQuery := c.Query("search")
+
+	// Page
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to convert page to int",
+		})
+		return
+
+	}
+
+	invoice, totalCount, firstRow, lastRow, totalPages := h.service.FindAllImport(searchQuery, page, filterForm)
+
+	var invoiceResponses []responses.InvoiceResponse
+	for _, invoice := range invoice {
+		invoiceResponses = append(invoiceResponses, convertInvoiceImportResponse(invoice))
+	}
+
+	webPaginationResponse := responses.PaginationResponse{
+		Code:          http.StatusOK,
+		Status:        "OK",
+		DataResponses: invoiceResponses,
+		TotalCount:    totalCount,
+		FirstRow:      firstRow,
+		LastRow:       lastRow,
+		TotalPages:    totalPages,
+	}
+
+	c.JSON(http.StatusOK, webPaginationResponse)
 }
 
 // Door to Door controllers
