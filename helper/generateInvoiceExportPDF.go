@@ -78,7 +78,7 @@ func GenerateInvoiceExportPDF(invoice models.InvoiceExport) {
 
 func addInvoiceHeader() core.Row {
 	return row.New(40).Add(
-		image.NewFromFileCol(12, "/app/assets/logotext.png",
+		image.NewFromFileCol(12, "/root/assets/logotext.png",
 			props.Rect{
 				Center:  true,
 				Percent: 100,
