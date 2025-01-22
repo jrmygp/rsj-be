@@ -30,6 +30,10 @@ WORKDIR /root/
 # Copy the compiled app from the builder stage
 COPY --from=builder /app/app .
 
+# Ensure necessary directories exist with correct permissions
+RUN mkdir -p /root/pdf/invoice /root/pdf/invoice-d2d /root/pdf/quotation \
+    && chmod -R 777 /root/pdf
+
 # Expose the port
 EXPOSE 8080
 
