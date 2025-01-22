@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"server/models"
-	"strings"
 
 	"github.com/johnfercher/maroto/v2"
 	"github.com/johnfercher/maroto/v2/pkg/components/col"
@@ -16,18 +15,15 @@ import (
 	"github.com/johnfercher/maroto/v2/pkg/components/text"
 	"github.com/johnfercher/maroto/v2/pkg/config"
 	"github.com/johnfercher/maroto/v2/pkg/consts/align"
-	"github.com/johnfercher/maroto/v2/pkg/consts/border"
 	"github.com/johnfercher/maroto/v2/pkg/consts/fontfamily"
 	"github.com/johnfercher/maroto/v2/pkg/consts/fontstyle"
-	"github.com/johnfercher/maroto/v2/pkg/consts/linestyle"
 	"github.com/johnfercher/maroto/v2/pkg/consts/orientation"
 	"github.com/johnfercher/maroto/v2/pkg/consts/pagesize"
 	"github.com/johnfercher/maroto/v2/pkg/core"
 	"github.com/johnfercher/maroto/v2/pkg/props"
-	ntw "moul.io/number-to-words"
 )
 
-func GenerateInvoicePDF(invoice models.InvoiceExport) {
+func GenerateInvoiceImportPDF(invoice models.InvoiceImport) {
 	cfg := config.NewBuilder().
 		WithOrientation(orientation.Vertical).
 		WithPageSize(pagesize.A4).
@@ -39,22 +35,22 @@ func GenerateInvoicePDF(invoice models.InvoiceExport) {
 	m := maroto.New(cfg)
 
 	// Header
-	err := m.RegisterHeader(addInvoiceHeader())
+	err := m.RegisterHeader(addInvoiceHeaderImport())
 	if err != nil {
 		log.Println("Error generating PDF Header:", err.Error())
 	}
 
 	// Footer
-	if err = m.RegisterFooter(addInvoiceFooter(invoice)); err != nil {
+	if err = m.RegisterFooter(addInvoiceFooterImport(invoice)); err != nil {
 		log.Println("Error generating PDF Footer:", err.Error())
 	}
 
 	// addInvoiceHeader(m)
-	addInvoiceNumber(m, invoice)
-	customerSection(m, invoice)
-	priceSpellingSection(m, invoice)
-	addInvoiceDetail(m, invoice)
-	addInvoiceItemList(m, invoice)
+	addInvoiceNumberImport(m, invoice)
+	customerSectionImport(m, invoice)
+	priceSpellingSectionImport(m, invoice)
+	addInvoiceDetailImport(m, invoice)
+	addInvoiceItemListImport(m, invoice)
 	// // Item List
 	// // Note and Signature
 	// addNoteAndSignature(m, invoice)
@@ -76,7 +72,7 @@ func GenerateInvoicePDF(invoice models.InvoiceExport) {
 	log.Println("PDF saved successfully")
 }
 
-func addInvoiceHeader() core.Row {
+func addInvoiceHeaderImport() core.Row {
 	return row.New(40).Add(
 		image.NewFromFileCol(12, "assets/logotext.png",
 			props.Rect{
@@ -86,7 +82,7 @@ func addInvoiceHeader() core.Row {
 	)
 }
 
-func addInvoiceNumber(m core.Maroto, invoice models.InvoiceExport) {
+func addInvoiceNumberImport(m core.Maroto, invoice models.InvoiceImport) {
 	m.AddRow(5)
 
 	m.AddRow(20,
@@ -150,7 +146,7 @@ func addInvoiceNumber(m core.Maroto, invoice models.InvoiceExport) {
 	m.AddRow(5, line.NewCol(12, props.Line{SizePercent: 100}))
 }
 
-func customerSection(m core.Maroto, invoice models.InvoiceExport) {
+func customerSectionImport(m core.Maroto, invoice models.InvoiceImport) {
 	m.AddRow(15,
 		col.New(8).Add(
 			text.New("Sudah diterima dari :", props.Text{
@@ -190,26 +186,7 @@ func customerSection(m core.Maroto, invoice models.InvoiceExport) {
 
 }
 
-// Function to calculate total in IDR and spell it
-func CalculateTotalAndSpell(invoiceItems []models.InvoiceItem) string {
-	var totalIDR float64
-
-	// Loop through invoice items to calculate total in IDR
-	for _, item := range invoiceItems {
-		itemTotal := item.Price * float64(item.Quantity)
-		if strings.ToUpper(item.Currency) != "IDR" {
-			// Convert to IDR
-			itemTotal *= *item.Kurs
-		}
-		totalIDR += itemTotal
-	}
-
-	// Convert total to words in Indonesian
-	spelledTotal := ntw.IntegerToIDID(int(totalIDR)) + " rupiah"
-	return strings.ToUpper(spelledTotal)
-}
-
-func priceSpellingSection(m core.Maroto, invoice models.InvoiceExport) {
+func priceSpellingSectionImport(m core.Maroto, invoice models.InvoiceImport) {
 	m.AddRow(15,
 		col.New(12).Add(
 			text.New("Uang sejumlah :", props.Text{
@@ -234,7 +211,7 @@ func priceSpellingSection(m core.Maroto, invoice models.InvoiceExport) {
 
 }
 
-func addInvoiceDetail(m core.Maroto, invoice models.InvoiceExport) {
+func addInvoiceDetailImport(m core.Maroto, invoice models.InvoiceImport) {
 	m.AddRow(40,
 		col.New(3).Add(
 			text.New("Untuk pembayaran :", props.Text{
@@ -288,50 +265,7 @@ func addInvoiceDetail(m core.Maroto, invoice models.InvoiceExport) {
 
 }
 
-type InvoiceItem struct {
-	Item     string
-	Qty      string
-	Kurs     string
-	Price    string
-	SubTotal string
-}
-
-func (o InvoiceItem) GetHeader() core.Row {
-	rowStyle := &props.Cell{
-		BorderColor:     &props.BlackColor,
-		BorderType:      border.Full,
-		LineStyle:       linestyle.Solid,
-		BackgroundColor: &props.Color{220, 220, 220},
-	}
-
-	return row.New().Add(
-		text.NewCol(2, "Item", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(2, "Qty", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(2, "Kurs", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(3, "Price", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(3, "Sub Total", props.Text{Style: fontstyle.Bold, Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-	)
-}
-
-func (o InvoiceItem) GetContent(i int) core.Row {
-	rowStyle := &props.Cell{
-		BorderColor: &props.BlackColor,
-		BorderType:  border.Full,
-		LineStyle:   linestyle.Solid,
-	}
-
-	r := row.New().Add(
-		text.NewCol(2, o.Item, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(2, o.Qty, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(2, o.Kurs, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(3, o.Price, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-		text.NewCol(3, o.SubTotal, props.Text{Size: 12, Top: 2, Left: 2, Bottom: 2, Right: 2, Family: fontfamily.Courier}).WithStyle(rowStyle),
-	)
-
-	return r
-}
-
-func getInvoiceObject(invoice models.InvoiceExport) []InvoiceItem {
+func getInvoiceObjectImport(invoice models.InvoiceImport) []InvoiceItem {
 	var items []InvoiceItem
 
 	for _, item := range invoice.InvoiceItems {
@@ -359,8 +293,8 @@ func getInvoiceObject(invoice models.InvoiceExport) []InvoiceItem {
 	return items
 }
 
-func addInvoiceItemList(m core.Maroto, invoice models.InvoiceExport) {
-	rows, err := list.Build[InvoiceItem](getInvoiceObject(invoice))
+func addInvoiceItemListImport(m core.Maroto, invoice models.InvoiceImport) {
+	rows, err := list.Build[InvoiceItem](getInvoiceObjectImport(invoice))
 	if err != nil {
 		log.Println("Error generating PDF:", err.Error())
 	}
@@ -430,7 +364,7 @@ func addInvoiceItemList(m core.Maroto, invoice models.InvoiceExport) {
 
 }
 
-func addInvoiceFooter(invoice models.InvoiceExport) core.Row {
+func addInvoiceFooterImport(invoice models.InvoiceImport) core.Row {
 	return row.New().Add(
 		col.New(8).Add(
 			text.New("INFORMASI PEMBAYARAN / PAYMENT DETAILS :", props.Text{

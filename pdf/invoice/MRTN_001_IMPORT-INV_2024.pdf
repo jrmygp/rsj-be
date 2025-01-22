@@ -7,7 +7,7 @@
 /Contents 4 0 R>>
 endobj
 4 0 obj
-<</Length 15595>>
+<</Length 15597>>
 stream
 0 J
 0 j
@@ -64,7 +64,7 @@ BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 12.00 Tf ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 12.00 Tf ET
 BT 42.52 688.16 Td () Tj ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 12.00 Tf ET
-BT 42.52 676.16 Td (MRTN/004/IMPORT-EXP/2024 ) Tj ET
+BT 42.52 676.16 Td (MRTN/001/IMPORT-INV/2024 ) Tj ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 13.00 Tf ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 13.00 Tf ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 13.00 Tf ET
@@ -151,7 +151,7 @@ BT 42.52 504.91 Td (In payment of) Tj ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 11.00 Tf ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 11.00 Tf ET
 BT /F17594626fac7af9809be5d8deddaada0f15c8ab6 11.00 Tf ET
-BT 170.08 519.08 Td (Export Clearances Charges) Tj ET
+BT 170.08 519.08 Td (Import Clearances Charges) Tj ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
@@ -163,7 +163,7 @@ BT 170.08 490.73 Td (No Aju   : 902940) Tj ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
-BT 170.08 476.56 Td (Shipper  : Mansiro) Tj ET
+BT 170.08 476.56 Td (Shipper  : shipper A) Tj ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
 BT /Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 11.00 Tf ET
@@ -341,35 +341,35 @@ endobj
 endobj
 5 0 obj
 <</Type /Font
-/BaseFont /Courier
+/BaseFont /Courier-Bold
 /Subtype /Type1
 /Encoding /WinAnsiEncoding
 >>
 endobj
 6 0 obj
 <</Type /Font
-/BaseFont /Courier-Bold
+/BaseFont /Courier-BoldOblique
 /Subtype /Type1
 /Encoding /WinAnsiEncoding
 >>
 endobj
 7 0 obj
 <</Type /Font
-/BaseFont /Courier-BoldOblique
+/BaseFont /Courier-Oblique
 /Subtype /Type1
 /Encoding /WinAnsiEncoding
 >>
 endobj
 8 0 obj
 <</Type /Font
-/BaseFont /Courier-Oblique
+/BaseFont /Helvetica
 /Subtype /Type1
 /Encoding /WinAnsiEncoding
 >>
 endobj
 9 0 obj
 <</Type /Font
-/BaseFont /Helvetica
+/BaseFont /Courier
 /Subtype /Type1
 /Encoding /WinAnsiEncoding
 >>
@@ -730,11 +730,11 @@ endobj
 <<
 /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
 /Font <<
-/F0a76705d18e0494dd24cb573e53aa0a8c710ec99 9 0 R
-/Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 5 0 R
-/F17594626fac7af9809be5d8deddaada0f15c8ab6 6 0 R
-/F4d71ebbe4b0e9c1f8c7181c779c93419f9afc937 7 0 R
-/F00c8618d32eb70842f18d758ee4b04028a1846ad 8 0 R
+/F0a76705d18e0494dd24cb573e53aa0a8c710ec99 8 0 R
+/Ff3d9bb94eeeff89a090f4dc5bfa51473a19690b3 9 0 R
+/F17594626fac7af9809be5d8deddaada0f15c8ab6 5 0 R
+/F4d71ebbe4b0e9c1f8c7181c779c93419f9afc937 6 0 R
+/F00c8618d32eb70842f18d758ee4b04028a1846ad 7 0 R
 >>
 /XObject <<
 /I9d7bfc4ec6789003fb0e1384c8202dd6b544c041 10 0 R
@@ -746,8 +746,8 @@ endobj
 12 0 obj
 <<
 /Producer (þÿ F P D F   1 . 7)
-/CreationDate (D:20250122201815)
-/ModDate (D:20250122201815)
+/CreationDate (D:20250122201804)
+/ModDate (D:20250122201804)
 >>
 endobj
 13 0 obj
@@ -764,19 +764,19 @@ endobj
 xref
 0 14
 0000000000 65535 f 
-0000015789 00000 n 
-0000109425 00000 n 
+0000015791 00000 n 
+0000109427 00000 n 
 0000000009 00000 n 
 0000000143 00000 n 
-0000015876 00000 n 
-0000015970 00000 n 
-0000016069 00000 n 
-0000016175 00000 n 
-0000016277 00000 n 
-0000016373 00000 n 
-0000087473 00000 n 
-0000109832 00000 n 
-0000109946 00000 n 
+0000015878 00000 n 
+0000015977 00000 n 
+0000016083 00000 n 
+0000016185 00000 n 
+0000016281 00000 n 
+0000016375 00000 n 
+0000087475 00000 n 
+0000109834 00000 n 
+0000109948 00000 n 
 trailer
 <<
 /Size 14
@@ -784,5 +784,5 @@ trailer
 /Info 12 0 R
 >>
 startxref
-110044
+110046
 %%EOF

@@ -170,6 +170,7 @@ func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorR
 	}
 }
 
+// Export Invoice controllers
 func (h *InvoiceController) FindAllInvoiceExportWithoutPagination(c *gin.Context) {
 	invoices, err := h.service.FindAllExportNoPagination()
 	if err != nil {
@@ -388,7 +389,7 @@ func (h *InvoiceController) FindAllExport(c *gin.Context) {
 	c.JSON(http.StatusOK, webPaginationResponse)
 }
 
-func (h *InvoiceController) GeneratePDF(c *gin.Context) {
+func (h *InvoiceController) GenerateExportPDF(c *gin.Context) {
 	idParam := c.Param("id")
 	ID, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -408,16 +409,17 @@ func (h *InvoiceController) GeneratePDF(c *gin.Context) {
 
 	if invoice.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Quotation with this ID is not found!",
+			"error": "Invoice with this ID is not found!",
 		})
 		return
 	}
 	filePath := fmt.Sprintf("pdf/invoice/%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
-	helper.GenerateInvoicePDF(invoice)
+	helper.GenerateInvoiceExportPDF(invoice)
 
 	c.File(filePath)
 }
 
+// Import Invoice controllers
 func (h *InvoiceController) FindAllInvoiceImportWithoutPagination(c *gin.Context) {
 	invoices, err := h.service.FindAllImportNoPagination()
 	if err != nil {
@@ -634,6 +636,36 @@ func (h *InvoiceController) FindAllImport(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, webPaginationResponse)
+}
+
+func (h *InvoiceController) GenerateImportPDF(c *gin.Context) {
+	idParam := c.Param("id")
+	ID, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid ID format",
+		})
+		return
+	}
+
+	invoice, err := h.service.FindImportByID(ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if invoice.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Invoice with this ID is not found!",
+		})
+		return
+	}
+	filePath := fmt.Sprintf("pdf/invoice/%s.pdf", sanitizeFilename(invoice.InvoiceNumber))
+	helper.GenerateInvoiceImportPDF(invoice)
+
+	c.File(filePath)
 }
 
 // Door to Door controllers
@@ -863,7 +895,7 @@ func (h *InvoiceController) GenerateDoorToDoorPDF(c *gin.Context) {
 
 	if invoice.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Quotation with this ID is not found!",
+			"error": "Invoice with this ID is not found!",
 		})
 		return
 	}
