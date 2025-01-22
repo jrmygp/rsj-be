@@ -80,7 +80,7 @@ func GenerateQuotationPDF(quotation models.Quotation) {
 
 func addHeader() core.Row {
 	return row.New(50).Add(
-		image.NewFromFileCol(12, "assets/logotext.png",
+		image.NewFromFileCol(12, "/app/assets/logotext.png",
 			props.Rect{
 				Center:  true,
 				Percent: 75,
@@ -339,7 +339,7 @@ func addNoteAndSignature(m core.Maroto, quotation models.Quotation) {
 	m.AddRow(5)
 
 	m.AddRow(100,
-		image.NewFromFileCol(12, "assets/signpdf.jpg",
+		image.NewFromFileCol(12, "/app/assets/signpdf.jpg",
 			props.Rect{
 				Center:  true,
 				Percent: 100,

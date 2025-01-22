@@ -11,5 +11,8 @@ services:
       - DB_PASSWORD=password # The MySQL user's password
       - DB_NAME=rsj_be # The database name
       - DB_PORT=3309
+    volumes:
+      - ./assets:/app/assets
+      - ./pdf:/app/pdf
     ports:
       - "8080:8080" # Map host port 8080 to container port 8080
