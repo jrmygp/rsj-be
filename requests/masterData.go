@@ -14,7 +14,7 @@ type EditCustomerRequest struct {
 
 type CreatePortRequest struct {
 	PortName string `json:"portName" binding:"required"`
-	Note     string `json:"note" binding:"required"`
+	Note     string `json:"note"`
 	Status   string `json:"status" binding:"required"`
 }
 
