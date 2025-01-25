@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController, invoiceController *controllers.InvoiceController) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController, invoiceController *controllers.InvoiceController, documentController *controllers.DocumentController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -122,6 +122,18 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		doorToDoorInvoice.POST("", invoiceController.CreateDoorToDoor)
 		doorToDoorInvoice.PATCH("/:id", invoiceController.EditDoorToDoor)
 		doorToDoorInvoice.DELETE("/:id", invoiceController.DeleteDoorToDoor)
+	}
+
+	suratTugas := router.Group("/surat-tugas")
+	{
+		suratTugas.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+
+		suratTugas.POST("/pagination", documentController.FindAllSuratTugas)
+		suratTugas.GET("/generate-pdf/:id", documentController.GenerateSuratTugasPDF)
+		suratTugas.GET("/:id", documentController.FindSuratTugasByID)
+		suratTugas.POST("", documentController.CreateSuratTugas)
+		suratTugas.PATCH("/:id", documentController.EditSuratTugas)
+		suratTugas.DELETE("/:id", documentController.DeleteSuratTugas)
 	}
 
 	return router
