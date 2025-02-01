@@ -235,7 +235,7 @@ func priceSpellingSection(m core.Maroto, invoice models.InvoiceExport) {
 }
 
 func addInvoiceDetail(m core.Maroto, invoice models.InvoiceExport) {
-	m.AddRow(40,
+	m.AddRow(45,
 		col.New(3).Add(
 			text.New("Untuk pembayaran :", props.Text{
 				Family: fontfamily.Courier,
@@ -248,39 +248,44 @@ func addInvoiceDetail(m core.Maroto, invoice models.InvoiceExport) {
 				Size:   11,
 			}),
 		),
-		col.New(6).Add(
+		col.New(9).Add(
 			text.New(invoice.Type, props.Text{
 				Style:  fontstyle.Bold,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("BL/AWB   : "+invoice.BLAWB, props.Text{
+			text.New("BL/AWB    : "+invoice.BLAWB, props.Text{
 				Top:    5,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("No Aju   : "+invoice.AJU, props.Text{
+			text.New("No Aju    : "+invoice.AJU, props.Text{
 				Top:    10,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("Shipper  : "+invoice.Shipper.Name, props.Text{
+			text.New("Shipper   : "+invoice.Shipper.Name, props.Text{
 				Top:    15,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("Remarks  : "+invoice.ShippingMarks, props.Text{
+			text.New("Consignee : "+invoice.Consignee.Name, props.Text{
 				Top:    20,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("POL      : "+invoice.PortOfLoading.PortName, props.Text{
+			text.New("POL       : "+invoice.PortOfLoading.PortName, props.Text{
 				Top:    25,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("POD      : "+invoice.PortOfDischarge.PortName, props.Text{
+			text.New("POD       : "+invoice.PortOfDischarge.PortName, props.Text{
 				Top:    30,
+				Family: fontfamily.Courier,
+				Size:   11,
+			}),
+			text.New("Remarks   : "+invoice.ShippingMarks, props.Text{
+				Top:    35,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
@@ -351,7 +356,13 @@ func getInvoiceObject(invoice models.InvoiceExport) []InvoiceItem {
 				}
 				return "-"
 			}(),
-			Price:    item.Currency + " " + FormatThousandSeparatorFloat(item.Price),
+			Price: func() string {
+				currency := item.Currency
+				if currency == "IDR" {
+					currency = "Rp"
+				}
+				return currency + " " + FormatThousandSeparatorFloat(item.Price)
+			}(),
 			SubTotal: "Rp " + FormatThousandSeparatorFloat(subTotal),
 		})
 	}
@@ -447,7 +458,8 @@ func addInvoiceFooter(invoice models.InvoiceExport) core.Row {
 				Family: fontfamily.Courier,
 			}),
 			text.New("1. REKENING RUPIAH / INDONESIAN RUPIAH ACCOUNT", props.Text{
-				Top: 15,
+				Top:    15,
+				Family: fontfamily.Courier,
 			}),
 			text.New("NOMOR REKENING / ACCOUNT NUMBER : 240-303-0023", props.Text{
 				Top:    20,

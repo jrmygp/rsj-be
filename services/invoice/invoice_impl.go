@@ -478,12 +478,10 @@ func (s *service) EditDoorToDoor(ID int, invoiceRequest requests.EditDoorToDoorR
 	if invoiceRequest.Quantity != "" {
 		invoice.Quantity = invoiceRequest.Quantity
 	}
-	if invoiceRequest.Weight != 0 {
-		invoice.Weight = invoiceRequest.Weight
-	}
-	if invoiceRequest.Volume != 0 {
-		invoice.Volume = invoiceRequest.Volume
-	}
+
+	invoice.Weight = invoiceRequest.Weight
+	invoice.Volume = invoiceRequest.Volume
+
 	// Check if InvoiceDate is not zero (not the zero value for time.Time)
 	if !invoiceRequest.InvoiceDate.IsZero() {
 		invoice.InvoiceDate = invoiceRequest.InvoiceDate.Time

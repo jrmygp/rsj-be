@@ -232,43 +232,43 @@ func addInvoiceDetailD2D(m core.Maroto, invoice models.DoorToDoorInvoice) {
 				Style: fontstyle.Italic,
 			}),
 		),
-		col.New(6).Add(
+		col.New(9).Add(
 			text.New(invoice.Type, props.Text{
 				Style:  fontstyle.Bold,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("POL : "+invoice.PortOfLoading.PortName, props.Text{
+			text.New("POL      : "+invoice.PortOfLoading.PortName, props.Text{
 				Top:    5,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("POD : "+invoice.PortOfDischarge.PortName, props.Text{
+			text.New("POD      : "+invoice.PortOfDischarge.PortName, props.Text{
 				Top:    10,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("QTY : "+invoice.Quantity, props.Text{
+			text.New("QTY      : "+invoice.Quantity, props.Text{
 				Top:    15,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("Weight : "+FormatThousandSeparatorFloat(invoice.Weight)+" kg", props.Text{
+			text.New("Weight   : "+FormatThousandSeparatorFloat(invoice.Weight)+" kg", props.Text{
 				Top:    20,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("Volume : "+FormatThousandSeparatorFloat(invoice.Volume)+" cbm", props.Text{
+			text.New("Volume   : "+FormatThousandSeparatorFloat(invoice.Volume)+" cbm", props.Text{
 				Top:    25,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("Shipper : "+invoice.Shipper.Name, props.Text{
+			text.New("Shipper  : "+invoice.Shipper.Name, props.Text{
 				Top:    30,
 				Family: fontfamily.Courier,
 				Size:   11,
 			}),
-			text.New("Remarks : "+invoice.ShippingMarks, props.Text{
+			text.New("Remarks  : "+invoice.ShippingMarks, props.Text{
 				Top:    35,
 				Family: fontfamily.Courier,
 				Size:   11,
@@ -297,7 +297,13 @@ func getInvoiceObjectD2D(invoice models.DoorToDoorInvoice) []InvoiceItem {
 				}
 				return "-"
 			}(),
-			Price:    item.Currency + " " + FormatThousandSeparatorFloat(item.Price),
+			Price: func() string {
+				currency := item.Currency
+				if currency == "IDR" {
+					currency = "Rp"
+				}
+				return currency + " " + FormatThousandSeparatorFloat(item.Price)
+			}(),
 			SubTotal: "Rp " + FormatThousandSeparatorFloat(subTotal),
 		})
 	}
@@ -393,7 +399,8 @@ func addInvoiceFooterD2D(invoice models.DoorToDoorInvoice) core.Row {
 				Family: fontfamily.Courier,
 			}),
 			text.New("1. REKENING RUPIAH / INDONESIAN RUPIAH ACCOUNT", props.Text{
-				Top: 15,
+				Top:    15,
+				Family: fontfamily.Courier,
 			}),
 			text.New("NOMOR REKENING / ACCOUNT NUMBER : 240-303-0023", props.Text{
 				Top:    20,
