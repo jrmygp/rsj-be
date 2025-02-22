@@ -9,6 +9,7 @@ import (
 	invoiceRepo "server/repositories/invoice"
 	portRepo "server/repositories/port"
 	quotationRepo "server/repositories/quotation"
+	shipmentRepo "server/repositories/shipment"
 	shipperRepo "server/repositories/shipper"
 	userRepo "server/repositories/user"
 	costChargesService "server/services/costCharges"
@@ -17,6 +18,7 @@ import (
 	invoiceService "server/services/invoice"
 	portService "server/services/port"
 	quotationService "server/services/quotation"
+	shipmentService "server/services/shipment"
 	shipperService "server/services/shipper"
 	userService "server/services/user"
 )
@@ -58,8 +60,12 @@ func main() {
 	documentService := documentService.NewDocumentRepository(documentRepository)
 	documentController := controllers.NewDocumentController(documentService)
 
+	shipmentRepository := shipmentRepo.NewRepository(db)
+	shipmentService := shipmentService.NewService(shipmentRepository, quotationRepository, invoiceRepository)
+	shipmentController := controllers.NewShipmentController(shipmentService)
+
 	// Set up the router
-	router := config.NewRouter(userController, userService, customerController, portController, costChargesController, quotationController, shipperController, invoiceController, documentController)
+	router := config.NewRouter(userController, userService, customerController, portController, costChargesController, quotationController, shipperController, invoiceController, documentController, shipmentController)
 
 	// Start the server
 	router.Run(":8080")

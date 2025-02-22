@@ -91,6 +91,21 @@ func addSuratTugasNumber(m core.Maroto, suratTugas models.SuratTugas) {
 func addSuratTugasBody(m core.Maroto, suratTugas models.SuratTugas) {
 	m.AddRow(15)
 
+	// Variables for Assignor
+
+	alamatAssignor := ""
+	jabatanAssignor := ""
+
+	// Conditional logic for Assignor (Pemberi Tugas)
+	switch suratTugas.Assignor {
+	case "Harto Joman":
+		alamatAssignor = "Jl. Teh No. 3C"
+		jabatanAssignor = "Manager Import"
+	case "Martin Joman":
+		alamatAssignor = "Jl. Teh No. 3C"
+		jabatanAssignor = "Manager Import"
+	}
+
 	m.AddRow(20,
 		col.New(12).Add(
 			text.New("Jakarta, "+suratTugas.Date.Format("02 January 2006"), props.Text{
@@ -111,14 +126,14 @@ func addSuratTugasBody(m core.Maroto, suratTugas models.SuratTugas) {
 				Top:    10,
 				Left:   10,
 			}),
-			text.New("Alamat  : Kantor Radix Sagara Jomantara", props.Text{
+			text.New("Alamat  : "+alamatAssignor, props.Text{
 				Align:  align.Left,
 				Family: fontfamily.Courier,
 				Size:   11,
 				Top:    15,
 				Left:   10,
 			}),
-			text.New("Jabatan : Direktur", props.Text{
+			text.New("Jabatan : "+jabatanAssignor, props.Text{
 				Align:  align.Left,
 				Family: fontfamily.Courier,
 				Size:   11,
@@ -130,6 +145,22 @@ func addSuratTugasBody(m core.Maroto, suratTugas models.SuratTugas) {
 
 	m.AddRow(10)
 
+	// Variables for Assignee
+	nikAssignee := ""
+	alamatAssignee := ""
+	jabatanAssignee := ""
+
+	// Conditional logic for Assignee (Penerima Tugas)
+	switch suratTugas.Assignee {
+	case "Indra Abadi":
+		nikAssignee = "3212190802950002"
+		alamatAssignee = "Ds Arahan Lor, Indramayu"
+		jabatanAssignee = "Staff Operasional"
+	case "Sigit Alifiyah":
+		nikAssignee = "3212190405060001"
+		alamatAssignee = "Desa Arahan Kidul, Indramayu"
+		jabatanAssignee = "Staff Operasional"
+	}
 	m.AddRow(30,
 		col.New(12).Add(
 			text.New("Selanjutnya disebut sebagai pemberi tugas.", props.Text{
@@ -143,7 +174,7 @@ func addSuratTugasBody(m core.Maroto, suratTugas models.SuratTugas) {
 				Size:   11,
 				Top:    5,
 			}),
-			text.New("NIK     : 3171022308890003", props.Text{
+			text.New("NIK     : "+nikAssignee, props.Text{
 				Align:  align.Left,
 				Family: fontfamily.Courier,
 				Size:   11,
@@ -157,14 +188,14 @@ func addSuratTugasBody(m core.Maroto, suratTugas models.SuratTugas) {
 				Top:    15,
 				Left:   10,
 			}),
-			text.New("Alamat  : Jl. Mangga Besar", props.Text{
+			text.New("Alamat  : "+alamatAssignee, props.Text{
 				Align:  align.Left,
 				Family: fontfamily.Courier,
 				Size:   11,
 				Top:    20,
 				Left:   10,
 			}),
-			text.New("Jabatan : Staff Operasional", props.Text{
+			text.New("Jabatan : "+jabatanAssignee, props.Text{
 				Align:  align.Left,
 				Family: fontfamily.Courier,
 				Size:   11,

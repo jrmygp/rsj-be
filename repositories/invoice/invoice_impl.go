@@ -84,6 +84,20 @@ func (r *repository) FindAllExport(searchQuery string, offset int, pageSize int,
 	return invoices, totalCount
 }
 
+func (r *repository) FindExportByIDs(IDs []int) ([]models.InvoiceExport, error) {
+	var invoices []models.InvoiceExport
+
+	err := r.db.Preload("Customer").
+		Preload("Shipper").
+		Preload("Consignee").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").
+		Where("id IN (?)", IDs).
+		Find(&invoices).Error
+
+	return invoices, err
+}
+
 // Import implementations
 func (r *repository) FindAllImportNoPagination() ([]models.InvoiceImport, error) {
 	var invoices []models.InvoiceImport
@@ -154,6 +168,20 @@ func (r *repository) FindAllImport(searchQuery string, offset int, pageSize int,
 	return invoices, totalCount
 }
 
+func (r *repository) FindImportByIDs(IDs []int) ([]models.InvoiceImport, error) {
+	var invoices []models.InvoiceImport
+
+	err := r.db.Preload("Customer").
+		Preload("Shipper").
+		Preload("Consignee").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").
+		Where("id IN (?)", IDs).
+		Find(&invoices).Error
+
+	return invoices, err
+}
+
 // Door to Door implementations
 func (r *repository) FindAllDoorToDoorNoPagination() ([]models.DoorToDoorInvoice, error) {
 	var invoices []models.DoorToDoorInvoice
@@ -222,4 +250,18 @@ func (r *repository) FindAllDoorToDoor(searchQuery string, offset int, pageSize 
 		Find(&invoice)
 
 	return invoice, totalCount
+}
+
+func (r *repository) FindDoorToDoorByIDs(IDs []int) ([]models.DoorToDoorInvoice, error) {
+	var invoices []models.DoorToDoorInvoice
+
+	err := r.db.Preload("Customer").
+		Preload("Shipper").
+		Preload("Consignee").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").
+		Where("id IN (?)", IDs).
+		Find(&invoices).Error
+
+	return invoices, err
 }

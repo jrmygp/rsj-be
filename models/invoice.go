@@ -76,6 +76,7 @@ type InvoiceExport struct {
 	InvoiceDate       time.Time
 	Status            string
 	InvoiceItems      JSONInvoiceItems `gorm:"type:json"`
+	ShipmentID        int              `gorm:"foreignKey:ShipmentID"`
 }
 
 type InvoiceImport struct {
@@ -100,6 +101,7 @@ type InvoiceImport struct {
 	InvoiceDate       time.Time
 	Status            string
 	InvoiceItems      JSONInvoiceItems `gorm:"type:json"`
+	ShipmentID        int              `gorm:"foreignKey:ShipmentID"`
 }
 
 // Door to Door invoice
@@ -126,4 +128,5 @@ type DoorToDoorInvoice struct {
 	Weight            float64
 	Volume            float64
 	InvoiceItems      JSONInvoiceD2DItems `gorm:"type:json"`
+	ShipmentID        int                 `gorm:"foreignKey:ShipmentID"`
 }

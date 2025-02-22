@@ -85,3 +85,16 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (quot
 
 	return quotation, totalCount
 }
+
+func (r *repository) FindByIDs(IDs []int) ([]models.Quotation, error) {
+	var quotations []models.Quotation
+
+	err := r.db.Preload("Sales").
+		Preload("Customer").
+		Preload("PortOfLoading").
+		Preload("PortOfDischarge").
+		Where("id IN (?)", IDs).
+		Find(&quotations).Error
+
+	return quotations, err
+}

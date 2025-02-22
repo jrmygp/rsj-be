@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController, invoiceController *controllers.InvoiceController, documentController *controllers.DocumentController) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController, invoiceController *controllers.InvoiceController, documentController *controllers.DocumentController, shipmentController *controllers.ShipmentController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -134,6 +134,14 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		suratTugas.POST("", documentController.CreateSuratTugas)
 		suratTugas.PATCH("/:id", documentController.EditSuratTugas)
 		suratTugas.DELETE("/:id", documentController.DeleteSuratTugas)
+	}
+
+	shipment := router.Group("/shipment")
+	{
+		shipment.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+
+		shipment.GET("/pagination", shipmentController.FindAll)
+		shipment.POST("", shipmentController.CreateShipment)
 	}
 
 	return router

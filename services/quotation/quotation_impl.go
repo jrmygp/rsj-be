@@ -21,7 +21,6 @@ type service struct {
 
 func NewService(repository repositories.Repository, customerRepository customerRepositories.Repository, userRepository userRepositories.Repository, portRepository portRepositories.Repository) *service {
 	return &service{repository, customerRepository, userRepository, portRepository}
-
 }
 
 func (s *service) FindAllNoPagination() ([]models.Quotation, error) {

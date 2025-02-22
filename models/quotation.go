@@ -58,5 +58,5 @@ type Quotation struct {
 	PortOfDischargeID int `gorm:"foreignKey:PortOfDischargeID"`
 	PortOfDischarge   Port
 	ListCharges       JSONCharges `gorm:"type:json"` // Define as JSON type in MySQL
-	// ShipmentID
+	ShipmentID        int         `gorm:"foreignKey:ShipmentID"`
 }
