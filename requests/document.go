@@ -24,6 +24,7 @@ type EditSuratTugasRequest struct {
 
 type ItemRequest struct {
 	ItemName string   `json:"itemName" binding:"required"`
+	Type     string   `json:"type" binding:"required"`
 	Quantity int      `json:"quantity" binding:"required"`
 	Colly    *float64 `json:"colly"`
 	Volume   *float64 `json:"volume"`

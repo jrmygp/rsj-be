@@ -40,6 +40,7 @@ func convertSuratJalanResponse(o models.SuratJalan) responses.SuratJalanResponse
 	for _, item := range o.Items {
 		itemResponse := responses.ItemResponse{
 			ItemName: item.ItemName,
+			Type:     item.Type,
 			Quantity: item.Quantity,
 			Colly:    item.Colly,
 			Volume:   item.Volume,
@@ -54,7 +55,7 @@ func convertSuratJalanResponse(o models.SuratJalan) responses.SuratJalanResponse
 		DocumentNumber: o.DocumentNumber,
 		Recipient:      o.Recipient,
 		Address:        o.Address,
-		Date:           o.DocumentNumber,
+		Date:           o.Date.Format("2006-01-02"),
 		Items:          itemsResponse,
 	}
 }

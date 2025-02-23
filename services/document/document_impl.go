@@ -132,6 +132,7 @@ func (s *documentService) CreateSuratJalan(suratJalan requests.CreateSuratJalanR
 	for i, item := range suratJalan.Items {
 		items[i] = models.Item{
 			ItemName: item.ItemName,
+			Type:     item.Type,
 			Quantity: item.Quantity,
 			Colly:    item.Colly,
 			Volume:   item.Volume,
@@ -184,6 +185,7 @@ func (s *documentService) EditSuratJalan(ID int, suratJalan requests.EditSuratJa
 		for _, item := range suratJalan.Items {
 			jsonCharge := models.Item{
 				ItemName: item.ItemName,
+				Type:     item.Type,
 				Colly:    item.Colly,
 				Quantity: item.Quantity,
 				Volume:   item.Volume,

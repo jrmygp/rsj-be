@@ -13,6 +13,7 @@ type SuratTugasResponse struct {
 
 type ItemResponse struct {
 	ItemName string   `json:"itemName"`
+	Type     string   `json:"type"`
 	Quantity int      `json:"quantity"`
 	Colly    *float64 `json:"colly"`
 	Volume   *float64 `json:"volume"`
