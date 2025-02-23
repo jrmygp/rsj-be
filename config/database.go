@@ -30,7 +30,10 @@ func DatabaseConnection() *gorm.DB {
 		panic(err)
 	}
 
-	db.AutoMigrate(&models.UserRole{}, &models.User{}, &models.Shipper{}, &models.Customer{}, &models.Port{}, &models.CostCharges{}, &models.Quotation{}, &models.InvoiceImport{}, &models.InvoiceExport{}, &models.DoorToDoorInvoice{}, &models.SuratTugas{}, &models.Shipment{})
+	db.AutoMigrate(&models.UserRole{}, &models.User{}, &models.Shipper{}, &models.Customer{},
+		&models.Port{}, &models.CostCharges{}, &models.Quotation{},
+		&models.InvoiceImport{}, &models.InvoiceExport{}, &models.DoorToDoorInvoice{}, &models.SuratTugas{}, &models.Shipment{},
+		&models.SuratJalan{})
 
 	return db
 }

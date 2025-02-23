@@ -136,6 +136,18 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		suratTugas.DELETE("/:id", documentController.DeleteSuratTugas)
 	}
 
+	suratJalan := router.Group("/surat-jalan")
+	{
+		suratJalan.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
+
+		suratJalan.POST("/pagination", documentController.FindAllSuratJalan)
+		suratJalan.GET("/generate-pdf/:id", documentController.GenerateSuratJalanPDF)
+		suratJalan.GET("/:id", documentController.FindSuratJalanByID)
+		suratJalan.POST("", documentController.CreateSuratJalan)
+		suratJalan.PATCH("/:id", documentController.EditSuratJalan)
+		suratJalan.DELETE("/:id", documentController.DeleteSuratJalan)
+	}
+
 	shipment := router.Group("/shipment")
 	{
 		shipment.Use(middleware.RequireAuth(userService), middleware.RequireRole(1, 2))
