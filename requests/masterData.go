@@ -43,3 +43,11 @@ type EditShipperRequest struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
 }
+
+type WarehouseRequest struct {
+	Category   string  `json:"category" binding:"required"`
+	Name       string  `json:"name" binding:"required"`
+	Code       string  `json:"code" binding:"required"`
+	FlightName *string `json:"flightName"`
+	FlightCode *int    `json:"flightCode"`
+}

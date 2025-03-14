@@ -12,6 +12,7 @@ import (
 	shipmentRepo "server/repositories/shipment"
 	shipperRepo "server/repositories/shipper"
 	userRepo "server/repositories/user"
+	warehouseRepo "server/repositories/warehouse"
 	costChargesService "server/services/costCharges"
 	customerService "server/services/customer"
 	documentService "server/services/document"
@@ -21,6 +22,7 @@ import (
 	shipmentService "server/services/shipment"
 	shipperService "server/services/shipper"
 	userService "server/services/user"
+	warehouseService "server/services/warehouse"
 )
 
 func main() {
@@ -39,6 +41,10 @@ func main() {
 	portRepository := portRepo.NewRepository(db)
 	portService := portService.NewService(portRepository)
 	portController := controllers.NewPortController(portService)
+
+	warehouseRepository := warehouseRepo.NewRepository(db)
+	warehouseService := warehouseService.NewService(warehouseRepository)
+	warehouseController := controllers.NewWarehouseController(warehouseService)
 
 	costChargesRepository := costChargesRepo.NewRepository(db)
 	costChargesService := costChargesService.NewService(costChargesRepository)
@@ -65,7 +71,7 @@ func main() {
 	shipmentController := controllers.NewShipmentController(shipmentService)
 
 	// Set up the router
-	router := config.NewRouter(userController, userService, customerController, portController, costChargesController, quotationController, shipperController, invoiceController, documentController, shipmentController)
+	router := config.NewRouter(userController, userService, customerController, portController, costChargesController, quotationController, shipperController, invoiceController, documentController, shipmentController, warehouseController)
 
 	// Start the server
 	// router.Run(":8080")

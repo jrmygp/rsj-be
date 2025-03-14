@@ -25,3 +25,12 @@ type Shipper struct {
 	Name    string
 	Address string `gorm:"type:text"`
 }
+
+type Warehouse struct {
+	ID         int
+	Category   string
+	Name       string
+	Code       string
+	FlightName *string
+	FlightCode *int
+}

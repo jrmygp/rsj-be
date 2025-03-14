@@ -25,3 +25,11 @@ type ShipperResponse struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
 }
+
+type WarehouseResponse struct {
+	ID         int     `json:"id"`
+	Name       string  `json:"name"`
+	Code       string  `json:"code"`
+	FlightName *string `json:"flightName"`
+	FlightCode *int    `json:"flightCode"`
+}

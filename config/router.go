@@ -11,7 +11,7 @@ import (
 )
 
 // NewRouter creates a new router with routes and middleware set up
-func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController, invoiceController *controllers.InvoiceController, documentController *controllers.DocumentController, shipmentController *controllers.ShipmentController) *gin.Engine {
+func NewRouter(userController *controllers.UserController, userService userServices.Service, customerController *controllers.CustomerController, portController *controllers.PortController, costChargesController *controllers.CostChargesController, quotationController *controllers.QuotationController, shipperController *controllers.ShipperController, invoiceController *controllers.InvoiceController, documentController *controllers.DocumentController, shipmentController *controllers.ShipmentController, warehouseController *controllers.WarehouseController) *gin.Engine {
 	router := gin.Default()
 
 	// Enable CORS for all routes
@@ -70,6 +70,14 @@ func NewRouter(userController *controllers.UserController, userService userServi
 		masterData.POST("/shipper", shipperController.CreateShipper)
 		masterData.PATCH("/shipper/:id", shipperController.EditShipper)
 		masterData.DELETE("/shipper/:id", shipperController.DeleteShipper)
+
+		// Warehouse routes
+		masterData.GET("/warehouse/no-pagination", warehouseController.FindAllWarehousesWithoutPagination)
+		masterData.GET("/warehouse", warehouseController.FindAll)
+		masterData.GET("/warehouse/:id", warehouseController.FindWarehouseByID)
+		masterData.POST("/warehouse", warehouseController.CreateWarehouse)
+		masterData.PATCH("/warehouse/:id", warehouseController.EditWarehouse)
+		masterData.DELETE("/warehouse/:id", warehouseController.DeleteWarehouse)
 	}
 
 	quotation := router.Group("/quotation")

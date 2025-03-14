@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"server/models"
 	invoiceRepositories "server/repositories/invoice"
 	quotationRepositories "server/repositories/quotation"
@@ -52,6 +53,13 @@ func (s *service) Create(shipmentRequest requests.ShipmentRequest) (models.Shipm
 		if err != nil {
 			return models.Shipment{}, err
 		}
+
+		// Validate if any quotation is already linked to a shipment
+		for _, q := range quotations {
+			if q.ShipmentID != nil {
+				return models.Shipment{}, fmt.Errorf("quotation %s already linked to a shipment", q.QuotationNumber)
+			}
+		}
 	}
 
 	// Fetch Export invoices in a single query
@@ -61,23 +69,41 @@ func (s *service) Create(shipmentRequest requests.ShipmentRequest) (models.Shipm
 		if err != nil {
 			return models.Shipment{}, err
 		}
+
+		for _, i := range invoiceExports {
+			if i.ShipmentID != nil {
+				return models.Shipment{}, fmt.Errorf("invoice %s already linked to a shipment", i.InvoiceNumber)
+			}
+		}
 	}
 
 	// Fetch Import invoices in a single query
-	if len(shipmentRequest.Quotations) > 0 {
+	if len(shipmentRequest.InvoiceImports) > 0 {
 		var err error
 		invoiceImports, err = s.invoiceRepositories.FindImportByIDs(shipmentRequest.InvoiceImports)
 		if err != nil {
 			return models.Shipment{}, err
 		}
+
+		for _, i := range invoiceImports {
+			if i.ShipmentID != nil {
+				return models.Shipment{}, fmt.Errorf("invoice %s already linked to a shipment", i.InvoiceNumber)
+			}
+		}
 	}
 
 	// Fetch D2D invoices in a single query
-	if len(shipmentRequest.Quotations) > 0 {
+	if len(shipmentRequest.InvoiceDoorToDoors) > 0 {
 		var err error
 		invoiceD2Ds, err = s.invoiceRepositories.FindDoorToDoorByIDs(shipmentRequest.InvoiceDoorToDoors)
 		if err != nil {
 			return models.Shipment{}, err
+		}
+
+		for _, i := range invoiceD2Ds {
+			if i.ShipmentID != nil {
+				return models.Shipment{}, fmt.Errorf("invoice %s already linked to a shipment", i.InvoiceNumber)
+			}
 		}
 	}
 
