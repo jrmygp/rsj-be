@@ -107,12 +107,26 @@ func (s *service) Create(shipmentRequest requests.ShipmentRequest) (models.Shipm
 		}
 	}
 
+	shipmentDetails := make([]models.ShippingDetail, len(shipmentRequest.ShippingDetails))
+	for i, item := range shipmentRequest.ShippingDetails {
+		shipmentDetails[i] = models.ShippingDetail{
+			ShippingMark:    item.ShippingMark,
+			ContainerNumber: item.ContainerNumber,
+			SEAL:            item.SEAL,
+			SaidOfContain:   item.SaidOfContain,
+			NettWeight:      item.NettWeight,
+			GrossWeight:     item.GrossWeight,
+		}
+	}
+
 	shipment := models.Shipment{
 		ShipmentNumber:     shipmentRequest.ShipmentNumber,
 		Quotations:         quotations,
 		InvoiceExports:     invoiceExports,
 		InvoiceImports:     invoiceImports,
 		InvoiceDoorToDoors: invoiceD2Ds,
+		WarehouseID:        shipmentRequest.WarehouseID,
+		ShippingDetails:    shipmentDetails,
 	}
 
 	newShipment, err := s.repository.Create(shipment)

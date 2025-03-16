@@ -24,6 +24,7 @@ func convertShipmentResponse(o models.Shipment) responses.ShipmentResponse {
 	var exportResponse []responses.LinkedDocResponse
 	var importResponse []responses.LinkedDocResponse
 	var d2dResponse []responses.LinkedDocResponse
+	var shipmentDetailsResponse []responses.ShippingDetailResponse
 
 	for _, quotation := range o.Quotations {
 		itemResponse := responses.LinkedDocResponse{
@@ -57,13 +58,28 @@ func convertShipmentResponse(o models.Shipment) responses.ShipmentResponse {
 		d2dResponse = append(d2dResponse, itemResponse)
 	}
 
+	for _, item := range o.ShippingDetails {
+		detailResponse := responses.ShippingDetailResponse{
+			ShippingMark:    item.ShippingMark,
+			ContainerNumber: item.ContainerNumber,
+			SEAL:            item.SEAL,
+			SaidOfContain:   item.SaidOfContain,
+			NettWeight:      item.NettWeight,
+			GrossWeight:     item.GrossWeight,
+		}
+		shipmentDetailsResponse = append(shipmentDetailsResponse, detailResponse)
+	}
+
 	return responses.ShipmentResponse{
 		ID:                 o.ID,
+		WarehouseID:        o.WarehouseID,
+		WarehouseName:      o.Warehouse.Name,
 		ShipmentNumber:     o.ShipmentNumber,
 		Quotations:         quotationResponse,
 		InvoiceExports:     exportResponse,
 		InvoiceImports:     importResponse,
 		InvoiceDoorToDoors: d2dResponse,
+		ShippingDetails:    shipmentDetailsResponse,
 	}
 }
 

@@ -29,6 +29,7 @@ func (r *repository) FindAll(searchQuery string, offset int, pageSize int) (ship
 		Preload("InvoiceExports").
 		Preload("InvoiceImports").
 		Preload("InvoiceDoorToDoors").
+		Preload("Warehouse").
 		Find(&shipment)
 
 	return shipment, totalCount
@@ -41,6 +42,7 @@ func (r *repository) Create(shipment models.Shipment) (models.Shipment, error) {
 			Preload("InvoiceExports").
 			Preload("InvoiceImports").
 			Preload("InvoiceDoorToDoors").
+			Preload("Warehouse").
 			First(&shipment, shipment.ID).Error
 	}
 

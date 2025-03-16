@@ -59,6 +59,7 @@ func convertQuotationResponse(o models.Quotation) responses.QuotationResponse {
 		PortOfDischargeID:   o.PortOfDischargeID,
 		PortOfDischargeName: o.PortOfDischarge.PortName,
 		ListCharges:         listChargesResponse,
+		ShipmentID:          o.ShipmentID,
 	}
 }
 

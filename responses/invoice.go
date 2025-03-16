@@ -39,6 +39,7 @@ type InvoiceResponse struct {
 	Status              string                `json:"status"`
 	Nominal             float64               `json:"nominal"`
 	InvoiceItems        []InvoiceItemResponse `json:"invoiceItems"`
+	ShipmentID          *int                  `json:"shipmentId"`
 }
 
 type DoorToDoorResponse struct {
@@ -64,4 +65,5 @@ type DoorToDoorResponse struct {
 	Volume              float64                  `json:"volume"`
 	Nominal             float64                  `json:"nominal"`
 	InvoiceItems        []InvoiceD2DItemResponse `json:"invoiceItems"`
+	ShipmentID          *int                     `json:"shipmentId"`
 }

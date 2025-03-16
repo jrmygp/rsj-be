@@ -68,6 +68,7 @@ func convertInvoiceExportResponse(o models.InvoiceExport) responses.InvoiceRespo
 		Status:              o.Status,
 		InvoiceItems:        invoiceItemsResponse,
 		Nominal:             nominal,
+		ShipmentID:          o.ShipmentID,
 	}
 }
 
@@ -118,6 +119,7 @@ func convertInvoiceImportResponse(o models.InvoiceImport) responses.InvoiceRespo
 		Status:              o.Status,
 		InvoiceItems:        invoiceItemsResponse,
 		Nominal:             nominal,
+		ShipmentID:          o.ShipmentID,
 	}
 }
 
@@ -167,6 +169,7 @@ func convertDoorToDoorResponse(o models.DoorToDoorInvoice) responses.DoorToDoorR
 		Volume:              o.Volume,
 		InvoiceItems:        invoiceItemsResponse,
 		Nominal:             nominal,
+		ShipmentID:          o.ShipmentID,
 	}
 }
 

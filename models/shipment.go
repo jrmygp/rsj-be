@@ -35,8 +35,11 @@ type Shipment struct {
 	gorm.Model
 	ID                 int
 	ShipmentNumber     string
+	WarehouseID        int `gorm:"foreignKey:WarehouseID"`
+	Warehouse          Warehouse
 	Quotations         []Quotation         `gorm:"foreignKey:ShipmentID"`
 	InvoiceExports     []InvoiceExport     `gorm:"foreignKey:ShipmentID"`
 	InvoiceImports     []InvoiceImport     `gorm:"foreignKey:ShipmentID"`
 	InvoiceDoorToDoors []DoorToDoorInvoice `gorm:"foreignKey:ShipmentID"`
+	ShippingDetails    JSONShippingDetail  `gorm:"type:json"`
 }

@@ -31,4 +31,5 @@ type QuotationResponse struct {
 	PortOfDischargeID   int              `json:"portOfDischargeId"`
 	PortOfDischargeName string           `json:"portOfDischargeName"`
 	ListCharges         []ChargeResponse `json:"listCharges"`
+	ShipmentID          *int             `json:"shipmentId"`
 }
